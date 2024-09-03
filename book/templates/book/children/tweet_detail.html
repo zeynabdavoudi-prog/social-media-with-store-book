@@ -1,0 +1,1175 @@
+{% extends 'book/parent/base.html' %} {% load static %} {% block title %}Tweet
+Detail {% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/children/tweet.css' %}" />
+<link rel="stylesheet" href="{% static 'css/children/tweet_detail.css' %}" />
+<!-- Link Swiper's CSS -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+/>
+
+{% endblock %} {% block body %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{#show error    #}
+{% if form.errors %}
+    <div class="tweet-detail-error" style="position:absolute; z-index: 105;top: 40px;left: 20px;" >
+        <span class="fw-bold fs-4"><i class="bi bi-x-circle-fill me-2 text-danger"></i>خطا</span>
+            {% for field in form %}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <p class="fs-5"><span class="fw-bold">{{ field.label }}:</span>{{ error }}</p>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+                {% if form.non_filed_errors %}
+                    {{ form.non_filed_errors }}
+                {% endif %}
+
+    </div>
+{% endif %}
+{#profile#}
+{% if request.user.is_authenticated %}
+    {% for profile in profiles %}
+        {% if profile.user.id == request.user.id %}
+            {% if profile.file %}
+                <a href="{% url 'book:user_profile' request.user.id %} "
+                ><img
+                class="img-fluid img-profile-img"
+                src="{{ profile.file.url }}"
+                /></a>
+            {% else %}
+                <a href="{% url 'book:user_profile' request.user.id %}"
+                ><i class="bi bi-person-circle img-profile-i" ></i
+                ></a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+{#detail tweet#}
+<div class="container  p-3" style="margin-top: 7rem;">
+  <div class="row justify-content-center">
+    <div class="col-lg-12 col-xl-10 col_main py-4" >
+      <div class="row align-items-center">
+        {% if images %}
+        <div class="col-lg-4 mb-3 mb-lg-none">
+          <!-- Swiper -->
+          <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+              {% for image in images %}
+              <div class="swiper-slide">
+                <img class="img-fluid image-slide" src="{{ image.file.url }}" />
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          <!-- Swiper JS -->
+          <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+          <!-- Initialize Swiper -->
+          <script>
+            var swiper = new Swiper(".mySwiper", {
+              effect: "cards",
+              grabCursor: true,
+            });
+          </script>
+        </div>
+        <div class="col-lg-8">
+          <div class="card py-3  card-color">
+            <div class="card-body color-text-card">
+              <div class="card-title d-flex">
+                {% for profile in profiles %} {% if profile.user.id == tweet.user.id %}
+                 {% if profile.file %}
+                <a
+                  class="title_a"
+                  href="{% url 'book:user_profile' tweet.user.id %}"
+                  ><img
+                    class="img-fluid img-profile-img_tweet me-2"
+                    src="{{ profile.file.url }}"
+                  /><span class="span_title"
+                    >{{ profile.user.username }}</span
+                  ></a
+                >
+                {% else %}
+                <a
+                  class="title_a"
+                  href="{% url 'book:user_profile' tweet.user.id %}"
+                  ><i class="bi bi-person img-profile-i_tweet me-2 border px-2 border-2" style="border-radius: 50%"></i
+                  ><span class="span_title"
+                    >{{ profile.user.username }}</span
+                  ></a
+                >
+                {% endif %}{% endif %}{% endfor %} {% if tweet.updated_at %}
+                <p class="ms-auto">{{ tweet.updated_at }}</p>
+                {% else %}
+                <p class="ms-auto">{{ tweet.created_at }}</p>
+                {% endif %}
+              </div>
+              <div class="card-text mt-3 font-text">
+                <a
+                  style="text-decoration: none; color: inherit"
+                  href="{% url 'book:tweet_detail' tweet.slug tweet.id %}"
+                  >{{ tweet.body}}</a
+                >
+              </div>
+              <div class="card-text">
+                {% for tag in tweet.tags.all %} {% if tag|wordcount != 0 %}
+                <a
+                  style="text-decoration: none"
+                  href="{% url 'book:search_tag' tag.id %}"
+                  ><small class="small_text">#{{ tag }}</small></a
+                >
+                {% endif %}{% endfor %} {% if request.user.is_authenticated %}
+                {% if user_vote %}
+
+                <br />
+                <span class="d-flex justify-content-around align-items-end">
+                  <span
+                    ><a
+                      href="#"
+                      class="tweet-vote-count"
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal{{ tweet.id }}"
+                      ><span id="count">{{ tweet.tvote.count }}</span></a
+                    >
+                    <a onclick="like('{{ tweet.id }}')"
+                      ><i id="like" class="bi bi-heart-fill text-danger"></i></a
+                  ></span>
+                  <span
+                    ><span class="tweet-comment-count"
+                      >{{ tweet.comments.count }}</span
+                    ><i class="bi bi-chat-square-text-fill color-icon"></i
+                  ></span>
+{#                  <a href="{% url 'book:share_tweet' tweet.id %}"#}
+{#                    ><i class="bi bi-share-fill color-icon"></i#}
+{#                  ></a>#}
+                <div class="dropdown dropup">
+                        <a class="btn  dropdown-toggle fw-bold color-icon" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        اشتراک گذاری
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item " href="{% url 'book:share_tweet' tweet.id %}">اشتراک گذاری با ایمیل</a></li>
+                            {% if request.user.is_authenticated  %}
+                            <li><a style="cursor: pointer" class="dropdown-item border-top" data-bs-toggle="modal" data-bs-target="#exampleModalShare">اشتراگ گذاری به کاربر</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </span>
+
+                {% else %}
+                <br />
+                <span class="d-flex justify-content-around align-items-end"
+                  ><span
+                    ><a
+                      href="#"
+                      class="tweet-vote-count"
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal{{ tweet.id }}"
+                      ><span id="count">{{ tweet.tvote.count }}</span></a
+                    >
+                    <a onclick="like('{{ tweet.id }}')"
+                      ><i id="like" class="bi bi-heart color-icon"></i></a
+                  ></span>
+                  <span
+                    ><span class="tweet-comment-count"
+                      >{{ tweet.comments.count }}</span
+                    ><i class="bi bi-chat-square-text-fill color-icon"></i
+                  ></span>
+{#                  <a href="{% url 'book:share_tweet' tweet.id %}"#}
+{#                    ><i class="bi bi-share-fill color-icon"></i></a>#}
+                <div class="dropdown dropup">
+                        <a class="btn  dropdown-toggle fw-bold color-icon" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        اشتراک گذاری
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item " href="{% url 'book:share_tweet' tweet.id %}">اشتراک گذاری با ایمیل</a></li>
+                            {% if request.user.is_authenticated  %}
+                            <li><a style="cursor: pointer" class="dropdown-item border-top" data-bs-toggle="modal" data-bs-target="#exampleModalShare">اشتراگ گذاری به کاربر</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </span>
+
+                {% endif %} {% else %}
+                <br />
+                <span class="d-flex justify-content-around align-items-end"
+                  ><span>
+                    <a
+                      class="tweet-vote-count"
+                      href="#"
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal{{ tweet.id }}"
+                      >{{ tweet.tvote.count }}</a
+                    >
+                    <a data-bs-toggle="modal" data-bs-target="#exampleModallike"
+                      ><i class="bi bi-heart color-icon"></i></a
+                  ></span>
+                  <span
+                    ><span class="tweet-comment-count"
+                      >{{ tweet.comments.count }}</span
+                    ><i class="bi bi-chat-square-text-fill color-icon"></i
+                  ></span>
+{#                  <a href="{% url 'book:share_tweet' tweet.id %}"#}
+{#                    ><i class="bi bi-share-fill color-icon"></i></a>#}
+                <div class="dropdown dropup">
+                        <a class="btn  dropdown-toggle fw-bold color-icon" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        اشتراک گذاری
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item " href="{% url 'book:share_tweet' tweet.id %}">اشتراک گذاری با ایمیل</a></li>
+                            {% if request.user.is_authenticated  %}
+                            <li><a style="cursor: pointer" class="dropdown-item border-top" data-bs-toggle="modal" data-bs-target="#exampleModalShare">اشتراگ گذاری به کاربر</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </span>
+                {% endif %}
+              </div>
+              {% if tweet.user.id == request.user.id %}
+              <div
+                class="dropdown"
+                style="position: absolute; top: 0.1rem; left: 0.5rem"
+              >
+                <button
+                  class="btn dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                ></button>
+                <ul
+                  class="dropdown-menu dropdown-menu-end border-1 border-black"
+                >
+                  <li>
+                    <a class="dropdown-item fw-bold border-bottom" href="#"
+                    data-bs-toggle="modal" data-bs-target="#exampleModaldeletetweet"
+                      >حذف توییت</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item fw-bold" href="{% url 'book:update_tweet' tweet.id %}">ویرایش توییت</a>
+                  </li>
+                </ul>
+              </div>
+                {% else %}
+                  <div
+                class="dropdown"
+                style="position: absolute; top: 0.1rem; left: 0.5rem"
+              >
+                <button
+                  class="btn dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                ></button>
+                <ul
+                  class="dropdown-menu dropdown-menu-end border-1 border-black"
+                >
+                  <li>
+                    <a class="dropdown-item fw-bold border-bottom" href="#"
+                       data-bs-toggle="modal"
+                      data-bs-target="#exampleModalBlock"
+                      ><span> <i class="bi bi-ban me-2"></i>مسدود سازی کاربر</span></a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item fw-bold" href="{% url 'book:report_tweet' tweet.user.id tweet.id %}"><span><i class="bi bi-flag me-2"></i>گزارش کردن توییت</span></a>
+                  </li>
+                </ul>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="col-lg-9 m-auto">
+          <div class="card py-3 shadow">
+            <div class="card-body color-text-card">
+              <div class="card-title d-flex">
+                {% for profile in profiles %} {% if profile.user.id == tweet.user.id %}
+                 {% if profile.file %}
+                <a
+                  class="title_a"
+                  href="{% url 'book:user_profile' tweet.user.id %}"
+                  ><img
+                    class="img-fluid img-profile-img_tweet me-2"
+                    src="{{ profile.file.url }}"
+                  /><span class="span_title"
+                    >{{ profile.user.username }}</span
+                  ></a
+                >
+                {% else %}
+                <a
+                  class="title_a"
+                  href="{% url 'book:user_profile' tweet.user.id %}"
+                  ><i class="bi bi-person img-profile-i_tweet me-2 border px-2 border-2" style="border-radius: 50%"></i
+                  ><span class="span_title"
+                    >{{ profile.user.username }}</span
+                  ></a
+                >
+                {% endif %}{% endif %}{% endfor %} {% if tweet.updated_at %}
+                <p class="ms-auto">{{ tweet.updated_at }}</p>
+                {% else %}
+                <p class="ms-auto">{{ tweet.created_at }}</p>
+                {% endif %}
+              </div>
+              <div class="card-text mt-3 font-text">
+                <a
+                  style="text-decoration: none; color: inherit"
+                  href="{% url 'book:tweet_detail' tweet.slug tweet.id %}"
+                  >{{ tweet.body}}</a
+                >
+              </div>
+              <div class="card-text">
+                {% for tag in tweet.tags.all %} {% if tag|wordcount != 0 %}
+                <a
+                  style="text-decoration: none"
+                  href="{% url 'book:search_tag' tag.id %}"
+                  ><small class="small_text">#{{ tag }}</small></a
+                >
+                {% endif %}{% endfor %} {% if request.user.is_authenticated %}
+                {% if user_vote %}
+
+                <br />
+                <span class="d-flex justify-content-around align-items-end">
+                  <span
+                    ><a
+                      href="#"
+                      class="tweet-vote-count"
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal{{ tweet.id }}"
+                      ><span id="count">{{ tweet.tvote.count }}</span></a
+                    >
+                    <a onclick="like('{{ tweet.id }}')"
+                      ><i id="like" class="bi bi-heart-fill text-danger"></i></a
+                  ></span>
+                  <span
+                    ><span class="tweet-comment-count"
+                      >{{ tweet.comments.count }}</span
+                    ><i class="bi bi-chat-square-text-fill color-icon"></i
+                  ></span>
+{#                  <a href="{% url 'book:share_tweet' tweet.id %}"#}
+{#                    ><i class="bi bi-share-fill color-icon"></i></a>#}
+                <div class="dropdown dropup">
+                        <a class="btn  dropdown-toggle fw-bold color-icon" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        اشتراک گذاری
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item " href="{% url 'book:share_tweet' tweet.id %}">اشتراک گذاری با ایمیل</a></li>
+                            {% if request.user.is_authenticated  %}
+                            <li><a style="cursor: pointer" class="dropdown-item border-top" data-bs-toggle="modal" data-bs-target="#exampleModalShare">اشتراگ گذاری به کاربر</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </span>
+
+                {% else %}
+                <br />
+                <span class="d-flex justify-content-around align-items-end"
+                  ><span
+                    ><a
+                      href="#"
+                      class="tweet-vote-count"
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal{{ tweet.id }}"
+                      ><span id="count">{{ tweet.tvote.count }}</span></a
+                    >
+                    <a onclick="like('{{ tweet.id }}')"
+                      ><i id="like" class="bi bi-heart color-icon"></i></a
+                  ></span>
+                  <span
+                    ><span class="tweet-comment-count"
+                      >{{ tweet.comments.count }}</span
+                    ><i class="bi bi-chat-square-text-fill color-icon"></i
+                  ></span>
+{#                  <a href="{% url 'book:share_tweet' tweet.id %}"#}
+{#                    ><i class="bi bi-share-fill color-icon"></i></a>#}
+                    <div class="dropdown dropup">
+                        <a class="btn  dropdown-toggle fw-bold color-icon" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        اشتراک گذاری
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item " href="{% url 'book:share_tweet' tweet.id %}">اشتراک گذاری با ایمیل</a></li>
+                            {% if request.user.is_authenticated  %}
+                            <li><a style="cursor: pointer" class="dropdown-item border-top" data-bs-toggle="modal" data-bs-target="#exampleModalShare">اشتراگ گذاری به کاربر</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </span>
+
+                {% endif %} {% else %}
+                <br />
+                <span class="d-flex justify-content-around align-items-end"
+                  ><span>
+                    <a
+                      class="tweet-vote-count"
+                      href="#"
+                      type="button"
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModal{{ tweet.id }}"
+                      >{{ tweet.tvote.count }}</a
+                    >
+                    <a data-bs-toggle="modal" data-bs-target="#exampleModallike"
+                      ><i class="bi bi-heart color-icon"></i></a
+                  ></span>
+                  <span
+                    ><span class="tweet-comment-count"
+                      >{{ tweet.comments.count }}</span
+                    ><i class="bi bi-chat-square-text-fill color-icon"></i
+                  ></span>
+{#                  <a href="{% url 'book:share_tweet' tweet.id %}"#}
+{#                    ><i class="bi bi-share-fill color-icon"></i></a>#}
+                <div class="dropdown dropup">
+                        <a class="btn  dropdown-toggle fw-bold color-icon" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        اشتراک گذاری
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item " href="{% url 'book:share_tweet' tweet.id %}">اشتراک گذاری با ایمیل</a></li>
+                            {% if request.user.is_authenticated  %}
+                            <li><a style="cursor: pointer" class="dropdown-item border-top" data-bs-toggle="modal" data-bs-target="#exampleModalShare">اشتراگ گذاری به کاربر</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </span>
+                {% endif %}
+              </div>
+              {% if tweet.user.id == request.user.id %}
+              <div
+                class="dropdown"
+                style="position: absolute; top: 0.1rem; left: 0.5rem"
+              >
+                <button
+                  class="btn dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                ></button>
+                <ul
+                  class="dropdown-menu dropdown-menu-end border-1 border-black"
+                >
+                  <li>
+                    <a class="dropdown-item fw-bold border-bottom" href="#"
+                    data-bs-toggle="modal" data-bs-target="#exampleModaldeletetweet"
+                      >حذف توییت</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item fw-bold" href="{% url 'book:update_tweet' tweet.id %}">ویرایش توییت</a>
+                  </li>
+                </ul>
+              </div>
+                  {% else %}
+                  <div
+                class="dropdown"
+                style="position: absolute; top: 0.1rem; left: 0.5rem"
+              >
+                <button
+                  class="btn dropdown-toggle"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                ></button>
+                <ul
+                  class="dropdown-menu dropdown-menu-end border-1 border-black"
+                >
+                  <li>
+                    <a class="dropdown-item fw-bold border-bottom" href="#"
+                       data-bs-toggle="modal"
+                      data-bs-target="#exampleModalBlock"
+                      ><span> <i class="bi bi-ban me-2"></i>مسدود سازی کاربر</span></a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item fw-bold" href="{% url 'book:report_tweet' tweet.user.id tweet.id %}"><span><i class="bi bi-flag me-2"></i>گزارش کردن توییت</span></a>
+                  </li>
+                </ul>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{#      modal show like tweet    #}
+<div
+  class="modal fade"
+  id="exampleModal{{ tweet.id }}"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  data-bs-backdrop="static"
+>
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">
+          پسندیده شد توسط:
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        {% for vote in votes %} {% if vote.tweet.id == tweet.id %} {% for profile in profiles %}
+         {% if profile.user.id == vote.user.id and profile.user.id != request.user.id and profile.user.id not in blocked_user_ids %}
+         {% if profile.file %}
+        <span class="d-flex align-items-center">
+          <a href="{% url 'book:user_profile' profile.user.id %}">
+            <img
+              src="{{ profile.file.url }}"
+              class="img-fluid img-profile-img_modal"
+          /></a>
+          <a
+            href="{% url 'book:user_profile' profile.user.id %}"
+            class="ms-2 a-modal"
+            >{{ profile.user.username }}</a
+          >
+          {% if request.user.is_authenticated %} {% if profile.user.id in relation_list %}
+
+
+          <a
+            id="relation{{ profile.user.id }}"
+            onclick="Relation{{ profile.user.id }}('{{ profile.user.id }}')"
+            class="btn btn-primary ms-auto align-self-start"
+            >دنبال شده</a
+          >
+          {% elif profile.user.id not in relation_list and profile.user.id != request.user.id %}
+
+
+          <a
+            id="relation{{ profile.user.id }}"
+            onclick="Relation{{ profile.user.id }}('{{ profile.user.id }}')"
+            class="btn btn-outline-primary ms-auto align-self-start"
+            >دنبال کردن</a
+          >
+          {% endif %} {% endif %}
+        </span>
+        {% if profile.bio %}
+        <span class="modal-span opacity-75"
+          >{{ profile.bio | truncatewords:4 }}</span
+        >
+        {% endif %}
+        <hr />
+        {% else %}
+        <span class="d-flex align-items-center"
+          ><a href="{% url 'book:user_profile' profile.user.id %}">
+            <i class="bi bi-person-circle img-profile-i_modal"></i
+          ></a>
+          <a
+            href="{% url 'book:user_profile' profile.user.id %}"
+            class="ms-2 a-modal"
+            >{{ profile.user.username }}</a
+          >
+          {% if request.user.is_authenticated %} {% if profile.user.id in relation_list %}
+
+
+          <a
+            id="relation{{ profile.user.id }}"
+            onclick="Relation{{ profile.user.id }}('{{ profile.user.id }}')"
+            class="btn btn-primary ms-auto align-self-start"
+            >دنبال شده</a
+          >
+          {% elif profile.user.id not in relation_list and profile.user.id != request.user.id %}
+
+
+          <a
+            id="relation{{ profile.user.id }}"
+            onclick="Relation{{ profile.user.id }}('{{ profile.user.id }}')"
+            class="btn btn-outline-primary ms-auto align-self-start"
+            >دنبال کردن</a
+          >
+          {% endif %} {% endif %}
+        </span>
+        {% if profile.bio %}
+        <span class="modal-span opacity-75"
+          >{{ profile.bio | truncatewords:4 }}</span
+        >
+        {% endif %}
+        <hr />
+
+        {% endif %}
+{#        relation ajax#}
+        <script>
+          function Relation{{ profile.user.id }}(user_id){
+
+              var element = document.getElementById('relation{{ profile.user.id }}')
+
+              $.get(`/relation/${user_id}`).then(response =>{
+                  if (response['response'] === 'follow'){
+                      element.innerText = 'دنبال شده';
+                      $(element).removeClass('btn-outline-primary');
+                      $(element).addClass('btn-primary');
+
+                  }
+                  else {
+                      element.innerText = 'دنبال کردن';
+                      $(element).removeClass('btn-primary');
+                      $(element).addClass('btn-outline-primary');
+
+                  }
+              })
+          }
+        </script>
+
+        {% endif %} {% endfor %} {% endif %} {% endfor %}
+{#           ajax show like for request.user#}
+        {% if user_vote%} {% for profile in profiles%} {% if profile.user.id == request.user.id %}
+
+        <span id="span1opacity">
+          {% if profile.file %}
+
+          <span class="d-flex align-items-center">
+            <a href="{% url 'book:user_profile' profile.user.id %}">
+              <img
+                src="{{ profile.file.url }}"
+                class="img-fluid img-profile-img_modal"
+            /></a>
+            <a
+              href="{% url 'book:user_profile' profile.user.id %}"
+              class="ms-2 a-modal"
+              >{{ profile.user.username }}</a
+            ></span
+          >
+          {% if profile.bio %}
+          <span class="modal-span opacity-75"
+            >{{ profile.bio | truncatewords:4 }}</span
+          >
+          {% endif %}
+          <hr />
+          {% else %}
+          <span class="d-flex align-items-center"
+            ><a href="{% url 'book:user_profile' profile.user.id %}">
+              <i class="bi bi-person-circle img-profile-i_modal"></i
+            ></a>
+            <a
+              href="{% url 'book:user_profile' profile.user.id %}"
+              class="ms-2 a-modal"
+              >{{ profile.user.username }}</a
+            ></span
+          >
+          {% endif %}
+        </span>
+        {% endif %} {% endfor %} {% else %} {% for profile in profiles%} {% if profile.user.id == request.user.id %}
+
+        <span id="span2opacity" class="opacity_0">
+          {% if profile.file %}
+
+          <span class="d-flex align-items-center">
+            <a href="{% url 'book:user_profile' profile.user.id %}">
+              <img
+                src="{{ profile.file.url }}"
+                class="img-fluid img-profile-img_modal"
+            /></a>
+            <a
+              href="{% url 'book:user_profile' profile.user.id %}"
+              class="ms-2 a-modal"
+              >{{ profile.user.username }}</a
+            ></span
+          >
+          {% if profile.bio %}
+          <span class="modal-span opacity-75"
+            >{{ profile.bio | truncatewords:4 }}</span
+          >
+          {% endif %}
+          <hr />
+          {% else %}
+          <span class="d-flex align-items-center"
+            ><a href="{% url 'book:user_profile' profile.user.id %}">
+              <i class="bi bi-person-circle img-profile-i_modal"></i
+            ></a>
+            <a
+              href="{% url 'book:user_profile' profile.user.id %}"
+              class="ms-2 a-modal"
+              >{{ profile.user.username }}</a
+            ></span
+          >
+          {% endif %}
+        </span>
+        {% endif %} {% endfor %} {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{#modal delete tweet#}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModaldeletetweet" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">حذف توییت</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body fs-4">
+        آیا میخواهید این توییت را حذف کنید؟
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary2 fw-bold" data-bs-dismiss="modal">لغو</button>
+        <a    class="btn btn-secondary1 fw-bold" href="{% url 'book:delete_tweet' tweet.id %}">حذف</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{#comments    #}
+<div class="container mt-4">
+  <div class="row justify-content-center text-color">
+    <div class="col-lg-12 col-xl-10 col_main ">
+    {% load mptt_tags %}
+{#       creat new comment#}
+      <div class="row mt-5 ">
+        <div class="d-flex justify-content-between">
+          <span class="fs-2 ms-3"
+            ><i class="bi bi-wechat text-danger me-2"></i
+            ><span class="fw-bold">نظرات</span></span
+          >
+
+          {% if request.user.is_authenticated %}
+          <div>
+            <a
+              style="border-radius: 5rem"
+              class="btn btn-primary fw-bold fs-5 px-4 mb-3"
+              data-bs-toggle="collapse"
+              href="#collapseExample"
+              role="button"
+              aria-expanded="false"
+              aria-controls="collapseExample"
+            >
+              ایجاد نظر جدید
+            </a>
+          </div>
+        </div>
+
+        <div class="collapse" id="collapseExample">
+          <div class="card card-body card-color-chat" style="border: none">
+            <div class="d-flex">
+              <div>
+                {% for profile in profiles %} {% if profile.user.id == request.user.id %}
+                 {% if profile.file %}
+                <a href="{% url 'book:user_profile' request.user.id %} "
+                  ><img
+                    class="img-fluid img-profile-img_comment"
+                    src="{{ profile.file.url }}"
+                /></a>
+                {% else %}
+                <a href="{% url 'book:user_profile' request.user.id %}"
+                  ><i class="bi bi-person-circle img-profile-i_comment"></i
+                ></a>
+                {% endif %} {% endif %} {% endfor %}
+              </div>
+              <div class="d-flex flex-column mt-3 ms-3">
+                <span style="margin-bottom: 0.3rem"
+                  ><a
+                    style="text-decoration: none; color: inherit"
+                    href="{% url 'book:user_profile' request.user.id %}"
+                    >{{ request.user.username }}</a
+                  ></span
+                >
+                <span class="opacity-70">ثبت نظر جدید</span>
+              </div>
+            </div>
+            <div class="row mt-4">
+              <form method="post" novalidate>
+                {% csrf_token %}
+                  {{ form.as_p }}
+                <div class="d-flex justify-content-end mt-3">
+                  <input
+                    type="submit"
+                    value="ارسال"
+                    class="btn btn-secondary3 fs-5 fw-bold px-5"
+                  />
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+{#        show comment #}
+      <div class="row mt-3 p-4" >
+
+            {% recursetree comments %}
+            {% if node.user.id not in  blocked_user_ids  or  not request.user.is_authenticated %}
+            <div class="node" >
+        <div id="{{ node.id }}"
+          class="card background-color-card-comment  text-color m-auto"
+          style="width: 95%"
+        >
+          <div class="card-body">
+            <div class="card-title">
+                {% if node.parent %}
+            <div class="d-flex">
+
+                <span class="fw-bold" style="font-size: 1.3rem;color: #1C7293"> <i class="bi bi-square-fill" style="font-size: 0.8rem;color: #9EB3C2"></i> در پاسخ به{{ node.parent.user.username }}</span>
+
+
+            {% if request.user.is_authenticated %}
+                <div class="ms-auto fs-4">
+                  <a onclick="myFunction({{ node.id }})">
+                    <i style="color: #1C7293" class="bi bi-repeat"></i>
+                  </a>
+                </div>
+                {% endif %}
+            </div>
+                    {% endif %}
+              <div class="d-flex">
+                <div>
+                  {% for profile in profiles %} {% if profile.user.id == node.user.id  %}
+
+                   {% if profile.file %}
+                  <a href="{% url 'book:user_profile' node.user.id %} "
+                    ><img
+                      class="img-fluid img-profile-img_comment"
+                      src="{{ profile.file.url }}"
+                  /></a>
+                  {% else %}
+                  <a href="{% url 'book:user_profile' node.user.id %}"
+                    ><i class="bi bi-person-circle img-profile-i_comment"></i
+                  ></a>
+                  {% endif %} {% endif %} {% endfor %}
+                </div>
+                <div class="d-flex flex-column mt-3 ms-3">
+                  <span style="margin-bottom: 0.3rem"
+                    ><a
+                      style="text-decoration: none; color: inherit"
+                      href="{% url 'book:user_profile' node.user.id %}"
+                      >{{ node.user.username }}</a
+                    ></span
+                  >
+                  <span class="opacity-70"
+                    >{{ node.created_at|date:"Y-m-d" }}</span
+                  >
+                </div>
+                {% if request.user.is_authenticated  and not node.parent%}
+                <div class="ms-auto fs-4">
+                  <a onclick="myFunction({{ node.id }})">
+                    <i style="color: #1C7293" class="bi bi-repeat"></i>
+                  </a>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            <hr />
+            <p class="card-text fs-5">{{ node.body }}</p>
+
+            {% if request.user.is_authenticated %}
+                <div class="d-flex flex-row-reverse">
+{#                show dislike comment#}
+                {% if node.id in commnet_dislike_request_user_id %}
+
+                    <div class="d-flex flex-row-reverse">
+                        <a onclick="commentdislike{{ node.id }}({{ node.id }})" style="text-decoration: none;color: inherit">
+                            <span>
+                                <span id="node_countdis{{ node.id }}" class="fw-bold">{{ node.ctcdlvote.count }}</span>
+                                <i id="heartdis{{ node.id }}"  class="bi bi-hand-thumbs-down-fill text-danger ms-1"></i>
+                            </span>
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="d-flex flex-row-reverse">
+                        <a onclick="commentdislike{{ node.id }}({{ node.id }})"  style="text-decoration: none;color: inherit">
+                            <span>
+                                <span id="node_countdis{{ node.id }}" class="fw-bold">{{ node.ctcdlvote.count }}</span>
+                                <i id="heartdis{{ node.id }}" class="bi bi-hand-thumbs-down ms-1"></i>
+                            </span>
+
+                        </a>
+                    </div>
+                {% endif %}
+{#                show like comment#}
+                {% if node.id in commnet_like_request_user_id %}
+
+                    <div class="d-flex flex-row-reverse me-3">
+                        <a onclick="commentlike{{ node.id }}({{ node.id }})" style="text-decoration: none;color: inherit">
+                            <span>
+                                <span id="node_count{{ node.id }}" class="fw-bold">{{ node.ctclvote.count }}</span>
+                                <i id="heart{{ node.id }}"  class="bi bi-hand-thumbs-up-fill text-danger ms-1"></i>
+                            </span>
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="d-flex flex-row-reverse me-3">
+                        <a onclick="commentlike{{ node.id }}({{ node.id }})"  style="text-decoration: none;color: inherit">
+                            <span>
+                                <span id="node_count{{ node.id }}" class="fw-bold">{{ node.ctclvote.count }}</span>
+                                <i id="heart{{ node.id }}" class="bi bi-hand-thumbs-up ms-1"></i>
+                            </span>
+
+                        </a>
+                    </div>
+                {% endif %}
+                {# ajax comment like#}
+                <script>
+                    function commentlike{{ node.id }}(node_id){
+                        var element = document.getElementById('heart'+node_id)
+                        var count = document.getElementById('node_count'+ node_id )
+
+                        var elementdis = document.getElementById('heartdis'+node_id)
+                        var countdis = document.getElementById('node_countdis'+ node_id )
+
+                        $.get(`/like/Commnet/${node_id}/like/`).then(response =>{
+                            if (response['response'] === 'liked'){
+                                
+
+                                element.className = 'bi bi-hand-thumbs-up-fill text-danger ms-1'
+                                count.innerText = Number(count.innerText) + 1
+                            }
+                            if (response['response'] === 'unliked'){
+
+                                element.className = 'bi bi-hand-thumbs-up ms-1'
+                                count.innerText = Number(count.innerText) - 1
+                            }
+                            if (response['response'] === 'liked_delete dislike'){
+
+
+                                element.className = 'bi bi-hand-thumbs-up-fill text-danger  ms-1'
+                                count.innerText = Number(count.innerText) + 1
+
+                                elementdis.className = 'bi bi-hand-thumbs-down ms-1'
+                                countdis.innerText = Number(countdis.innerText) - 1
+
+                            }
+                        })
+
+                    }
+                </script>
+{#                ajax comment dislike#}
+                <script>
+                    function commentdislike{{ node.id }}(node_id){
+                        var element = document.getElementById('heartdis'+node_id)
+                        var count = document.getElementById('node_countdis'+ node_id )
+
+                        var elementlike = document.getElementById('heart'+node_id)
+                        var countlike = document.getElementById('node_count'+ node_id )
+
+                        $.get(`/like/Commnet/${node_id}/dislike/`).then(response =>{
+                            if (response['response'] === 'dislike'){
+
+                                element.className = 'bi bi-hand-thumbs-down-fill  ms-1'
+                                count.innerText = Number(count.innerText) + 1
+                            }
+                            if (response['response'] === 'undislike'){
+
+                                element.className = 'bi bi-hand-thumbs-down ms-1'
+                                count.innerText = Number(count.innerText) - 1
+                            }
+                            if (response['response'] === 'dislike_delete like'){
+
+
+                                element.className = 'bi bi-hand-thumbs-down-fill  ms-1'
+                                count.innerText = Number(count.innerText) + 1
+
+                                elementlike.className = 'bi bi-hand-thumbs-up  ms-1'
+                                countlike.innerText = Number(countlike.innerText) - 1
+
+                            }
+                        })
+
+                    }
+                </script>
+                </div>
+
+                {% else %}
+                    <div class="d-flex flex-row-reverse">
+                        <span class="fw-bold">{{ node.ctclvote.count }}<i class="bi bi-hand-thumbs-up ms-1"></i></span>
+                        <span class="fw-bold">{{ node.ctcdlvote.count }}<i class="bi bi-hand-thumbs-down ms-1"></i></span>
+                    </div>
+            {% endif %}
+
+          </div>
+
+        </div>
+
+                 {% if not node.is_leaf_node %}
+        <div class="children " >
+
+          {{ children }}
+        </div>
+        {% endif %}
+            </div>
+            {% endif %}
+      {% endrecursetree %}
+
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{#like tweet ajax#}
+
+<script>
+function like(tweet_id){
+
+    var element = document.getElementById('like')
+    var count = document.getElementById('count')
+
+    $.get(`/like/${tweet_id}`).then(response =>{
+        if (response['response'] === 'liked'){
+            element.className = 'bi bi-heart-fill text-danger'
+            count.innerText = Number(count.innerText) + 1
+            const span1Element = document.getElementById('span1opacity')
+            const span2Element = document.getElementById('span2opacity')
+            $(span1Element).removeClass('opacity_0');
+            $(span2Element).removeClass('opacity_0');
+
+        }
+        else {
+            element.className = 'bi bi-heart color-icon'
+            count.innerText = Number(count.innerText) - 1
+            const span1Element = document.getElementById('span1opacity')
+            const span2Element = document.getElementById('span2opacity')
+            $(span1Element).addClass('opacity_0');
+            $(span2Element).addClass('opacity_0');
+
+        }
+    })
+}
+
+</script>
+
+<!-- Modal dont have permison to like -->
+<div class="modal fade" id="exampleModallike" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body mt-3 ms-2">
+         <h4><span><i class="bi bi-info-circle me-2 text-info"></i>ابتدا وارد سایت شوید</span></h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{#modal block user#}
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalBlock" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fw-bold fs-4" id="exampleModalLabel">{{ tweet.user.username }}مسدود شود؟</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body fs-5">
+        {{ tweet.user.username }}دیگر نمیتواند شما را دنبال کند یا به شما پیام بفرستد ، و شما نیز توییت های ان را نخواهید دید.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary2 fw-bold" data-bs-dismiss="modal">لغو درخواست</button>
+        <a class="btn btn-secondary1 fw-bold" href="{% url 'book:block_user' tweet.user.id %}">مسدود سازی</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{#reply to reply#}
+<script>
+  function formExit() {
+    document.getElementById("newForm").remove();
+  }
+
+  function myFunction(id) {
+    if (document.contains(document.getElementById("newForm"))) {
+      document.getElementById("newForm").remove();
+    }
+
+    var d1 = document.getElementById(id);
+    d1.insertAdjacentHTML('afterend',
+      '<form novalidate id="newForm" class="form-insert py-2" method="post"> \
+                <select name="parent" class="d-none" id="id_parentt"> \
+                <option value="' + id + '" selected="' + id + '"></option> \
+                </select> \
+               <p>\
+    <label class="fs-5" for="id_body">متن پیام:</label>\
+    <textarea  name="body" cols="5" rows="3" class="w-100  p-3 fs-5 textarea_tweet_detail " placeholder="نظر خود را بنویسید..." maxlength="500" required="" aria-invalid="true" id="id_body"></textarea>\
+  </p>\
+                {% csrf_token %} \
+                 <div class="mt-3 d-flex justify-content-end "><div><button style="border-radius: 1rem;" type="button" class="btn btn-secondary2 fs-5 px-5 me-2" onclick="formExit()"">لغو</button></div>\
+                <button style="border-radius: 1rem;" type="submit" class="btn btn-secondary3 fs-5 px-5">ارسال</button></div>  \
+              </form>');
+
+    //document.querySelector('#id_parentt [value="' + id + '"]').selected = true;
+  }
+
+  $('#myForm').trigger("reset");
+</script>
+
+{#modal share tweet to user#}
+<div class="modal fade" id="exampleModalShare" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">اشتراک گذاری به:</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <div class="container">
+      <div class="row text-center">
+        {% for frnd in frnds %}
+            {% for profile in profiles %}
+                {% if profile.user.id == frnd.id %}
+                    <div class="col-4">
+                    {% if profile.file %}
+
+                        <a onclick="ShareTweet('{{ profile.user.id }}')"
+                        ><img
+                        class="img-fluid img-profile-img_chat"
+                        src="{{ profile.file.url }}"
+                        /></a>
+                         <p style="margin-top: 0.2rem">{{ profile.user.username }}</p>
+
+                    {% else %}
+                        <a onclick="ShareTweet('{{ profile.user.id }}')"
+                        ><i class="bi bi-person-circle img-profile-i_chat" ></i
+                        ></a>
+                         <p>{{ profile.user.username }}</p>
+                    {% endif %}
+
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+      </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+{#ajax for modal share tweet to user#}
+<script>
+function ShareTweet(user_id){
+
+    $.get(`/share_tweet_chat/{{tweet.id}}/${user_id}`)
+    $('#exampleModalShare').modal('hide');
+
+}
+</script>
+{% endblock %}

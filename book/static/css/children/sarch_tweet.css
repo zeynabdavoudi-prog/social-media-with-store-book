@@ -1,0 +1,56 @@
+
+.card-img-top {
+
+    height: 6.3rem;
+}
+.profile_file{
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    position: absolute;
+    right: 1rem;
+    top:4rem;
+    border: 0.25rem solid var(--background-color-card-search);
+}
+.profile_icon{
+    font-size: 2rem;
+    background-color: #9EB3C2;
+    padding: 0.4rem 0.8rem 0.1rem 0.8rem;
+    border-radius: 50%;
+    border: 0.25rem solid var(--background-color-card-search);
+    position: absolute;
+    top: 4.2rem;
+    right: 1rem;
+    color:#1C7293;
+
+}
+
+.button-follow-unfollow{
+    height: 1.5rem;
+    width: 5rem;
+    position: absolute;
+    left: 1rem;
+    top:7rem;
+    background-color: rgb(243,244,246);
+}
+a{
+    text-decoration: none;
+    font-size: 0.9rem;
+    color: black;
+}
+.card{
+    background-color: var(--background-color-card-search);
+    color: var(--color-text-card);
+}
+
+.not-found-text{
+    color: var(--color-text-card);
+}
+
+
+.opacity_0{
+    display: none;
+}
+.badge{
+    color: black;
+}

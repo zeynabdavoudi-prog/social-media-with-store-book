@@ -1,0 +1,77 @@
+from django.urls import path
+from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+app_name = 'book'
+urlpatterns = [
+    path('', views.HomePageView.as_view(), name='home'),
+    # social media
+    path('login/', views.LoginView.as_view(), name='user-login'),
+    path('logout/', views.LogoutView.as_view(), name='user-logout'),
+    path('register/', views.RegisterView.as_view(), name='user-register'),
+    path('reset/', views.UserPasswordResetView.as_view(), name='reset_password'),
+    path('reset/done/', views.UserPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('confirm/<uidb64>/<token>/', views.UserPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('confirm/complete/', views.UserPasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('tweet/', views.TweetView.as_view(), name='tweet'),
+    path('tweet/<int:type_tweet>', views.TweetView.as_view(), name='follow_tweet'),
+    path('profile/<int:user_id>', views.ProfileView.as_view(), name='user_profile'),
+    path('profile/<int:user_id>/<int:number_nav>/', views.ProfileView.as_view(), name='user_profile_nav'),
+    path('edit_profile/<int:user_id>', views.EditProfileView.as_view(), name='edit_profile'),
+    path('like/<int:tweet_id>', views.TweetLikeView.as_view(), name='tweet_like'),
+    path('search_tweet/', views.SearchTweetView.as_view(), name='search_tweet'),
+    path('relation/<int:user_id>', views.UserRelationsView.as_view(), name='user_relation'),
+    path('tweet_detail/<slug:tweet_slug>/<int:tweet_id>', views.TweetDetailView.as_view(), name='tweet_detail'),
+    path('share_tweet/<int:tweet_id>', views.ShareTweetView.as_view(), name='share_tweet'),
+    path('about_us/', views.AboutUsView.as_view(), name='about_us'),
+    path('contact_us/', views.ContactUsView.as_view(), name='contact_us'),
+    path('search_tag/<int:tag_id>', views.SearchTagView.as_view(), name='search_tag'),
+    path('delete_tweet/<int:tweet_id>', views.DeleteTweetView.as_view(), name='delete_tweet'),
+    path('update_tweet/<int:tweet_id>', views.UpdateTweetView.as_view(), name='update_tweet'),
+    path('block_user/<int:user_id>', views.BlockUserView.as_view(), name='block_user'),
+    path('report_user/<int:user_id>', views.ReportView.as_view(), name='report_user'),
+    path('report_tweet/<int:user_id>/<int:tweet_id>', views.ReportView.as_view(), name='report_tweet'),
+    path('chat/',views.Chat,name='chat'),
+    path('share_tweet_chat/<int:tweet_id>/<int:to_user>/',views.ShareTweetChatView.as_view(),name='share_tweet_chat'),
+    path('like/Commnet/<int:comment_id>/<str:value>/', views.CommentLikeView.as_view(), name='comment_like'),
+    path('closenotification/<int:from_user>', views.CloseNotificationView.as_view(), name='close_notification'),
+    path('notification/', views.NotificationView.as_view(), name='notification'),
+    # ------------------------------------store book----------------------------------------------------
+    path('salebook/', views.SaleBookView.as_view(), name='salebook'),
+    path('category/<str:category_name>', views.CategoryView.as_view(), name='category'),
+    path('category/<str:category_name>/<int:sort_by>/', views.CategoryView.as_view(), name='category_sort'),
+    path('category/<str:category_name>/<str:query_name>/<int:sort_by>/', views.CategoryView.as_view(), name='category_query_sort'),
+    path('detailsalebook/<int:book_id>/', views.DetailSaleBookView.as_view(), name='detail_salebook'),
+    path('like/book/<int:book_id>', views.BookLikeView.as_view(), name='book_like'),
+    path('share_book/<int:book_id>', views.ShareTweetView.as_view(), name='share_book'),
+    path('share_book_chat/<int:book_id>/<int:to_user>/', views.ShareTweetChatView.as_view(), name='share_book_chat'),
+    path('like/Book/Commnet/<int:commentbook_id>/<str:value>/', views.CommentLikeView.as_view(), name='commentbook_like'),
+    path('search/books', views.SearchBookView.as_view(), name='search_books'),
+    path('serach/books/<int:sort_by>/', views.SearchBookView.as_view(), name='searchbook_sort'),
+    path('delete/salebook/<int:book_id>/', views.DeleteBookView.as_view(), name='deletebook'),
+    path('update/salebook/<int:book_id>/', views.UpdateBookView.as_view(), name='updatebook'),
+    path('weblog/<str:name_weblog>/', views.WeblogView.as_view(), name='weblog'),
+    path('recommendedbook/', views.RecommendedBookUserView.as_view(), name='recommendedbookuser'),
+    path('detail/recommendedbook/<int:book_id>/', views.DetailRecommendedBookUserView.as_view(), name='detail_recommendedbookuser'),
+    path('delete/recommendedbook/<int:book_id>/', views.DeleteRecommendedBookUserView.as_view(), name='delete_recommendedbookuser'),
+    path('update/recommendedbook/<int:book_id>/', views.UpdateRecommendedBookUserView.as_view(), name='update_recommendedbookuser'),
+    path('Registration_of_the_requested_book/', views.RegistrationRequestedBookView.as_view(), name='requested_book'),
+    path('show/requestedbook', views.ShowRequestedBookView.as_view(), name='show_requested_book'),
+    path('detail/requestedbook/<int:book_id>/', views.DetailRequestedBookView.as_view(), name='detail_requested_book'),
+    path('delete/requestedbook/<int:book_id>/', views.DeleteRequestedBookView.as_view(), name='delete_requested_book'),
+    path('update/requestedbook/<int:book_id>/', views.UpdateRequestedBookView.as_view(), name='update_requested_book'),
+    path('closenotification/book/<int:user_salebook>/<int:book_id>', views.CloseNotificationView.as_view(), name='close_notification_book'),
+    path('add_to_cart/', views.add_to_cart, name='add_to_cart'),
+    path('show/detail/cart/', views.ShowDetailCartView.as_view(), name='show_detail_cart'),
+    path('delete/item/cart/<int:book_id>/', views.DeleteItemCartView.as_view(), name='delete_item_cart'),
+    path('factor/<int:id_seller>/<int:cart_id>/', views.FactorView.as_view(), name='factor'),
+    path('closenotification/cansel/factor/<int:cancel_factor_id>/', views.CloseNotificationView.as_view(),name='cancel_notification_factor'),
+    path('closenotification/conformation/factor/<int:conformation_factor_id>/', views.CloseNotificationView.as_view(),name='conformation_notification_factor'),
+    path('Buying-and-selling-guide/', views.BuyingSellingGuideView.as_view(),name='Buying-and-selling-guide'),
+    path('give/address/', views.GiveAddressUserView.as_view(),name='give_address_user'),
+
+
+
+]
+
+

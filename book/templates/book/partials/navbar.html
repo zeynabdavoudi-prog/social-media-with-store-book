@@ -1,0 +1,315 @@
+   <form id="csrf-form">
+        {% csrf_token %}
+
+    </form>
+
+    <!-- قرار دادن کتابخانه jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- سایر فایل‌های جاوا اسکریپت -->
+
+{% load static %}
+
+
+
+<nav
+  class="navbar navbar-expand-lg pt-2 nav-dark nav-light nav-direction nav-login nav-password nav-profile nav-display"
+  style="box-shadow: 5px 5px 15px rgba(7, 7, 7, 0.1)"
+>
+
+
+
+  <div class="container-fluid">
+    {% if request.user.is_authenticated %}
+
+    <!--buton logout befor lg mode-->
+    <div class="d-block d-lg-none">
+      <a class="nav-link" href="{% url 'book:user-logout' %}"
+        ><span class="badge nav-dark-log-reg nav-light-log-reg p-3"
+          ><i class="bi bi-box-arrow-left fs-3"></i
+        ></span>
+      </a>
+    </div>
+     <span class="badge card_nav me-3  position-relative d-block d-lg-none" >
+            <a style="color: inherit" href="{% url 'book:show_detail_cart' %}"
+                  ><i class="bi bi-cart4" style="font-size: 1.8rem"></i>
+
+            <span id="cart_count1" style="font-size: 0.7rem" class="position-absolute top-0 end-50 translate-middle badge rounded-pill bg-danger ">{{ request.user.cart_user.count }}</span>
+
+            </a>
+     </span>
+
+    {% else %}
+    <!--buton login , register befor lg mode-->
+    <div class="d-block d-lg-none">
+      <a class="nav-link" href="{% url 'book:user-login' %}"
+        ><span class="badge nav-dark-log-reg nav-light-log-reg p-3"
+          ><i class="bi bi-box-arrow-right fs-3"></i
+        ></span>
+      </a>
+    </div>
+    {% endif %}
+    <!-- navbar brand name and icon-->
+    <a class="navbar-brand ms-auto me-auto ms-lg-2 me-lg-0" href="#">
+      <span
+        ><i
+          class="fa-solid fa-book-open-reader fs-1 me-2"
+          style="color: #065a82"
+        ></i
+      ></span>
+      <span class="fs-3 fw-bold nav-dark-span">NetBook</span>
+    </a>
+    <!--offcanvas button-->
+    <button
+      class="navbar-toggler fs-1"
+      type="button"
+      data-bs-toggle="offcanvas"
+      data-bs-target="#offcanvasNavbar"
+    >
+      <span class="bi bi-list nav-dark-buttonoffcanvas"></span>
+    </button>
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar">
+      <div class="offcanvas-header">
+        <!-- btn-close for offcanvas-->
+        <button
+          type="button"
+          class="btn-close ms-auto"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <ul
+          class="navbar-nav me-lg-auto ms-lg-auto nav-dark-ul nav-ul-direction"
+        >
+          <!-- line in window offcanvas-->
+          <li class="nav-item">
+            <hr class="d-block d-lg-none nav-dark-hr" />
+          </li>
+          <!-- صفحه اصلی-->
+          <li class="nav-item nav-item-hover">
+            <!-- for befor lg-->
+            <a
+              id="special-link1"
+              class="nav-link fs-3 fw-bold nav-a-animation d-block d-lg-none"
+              href="{% url 'book:home' %}"
+              ><span class="nav-item-span"
+                ><i class="bi bi-house-fill me-2 nav-item-i"></i> صفحه
+                اصلی</span
+              ></a
+            >
+            <!--after lg,... -->
+            <a
+              id="special-link2"
+              class="nav-link fs-3 fw-bold me-2 nav-a-animation nav-light-a nav-dark-a d-none d-lg-block"
+              href="{% url 'book:home' %}"
+              >صفحه اصلی</a
+            >
+          </li>
+          <!-- توییت-->
+          <li class="nav-item nav-item-hover">
+            <!--befor lg -->
+            <a
+              class="nav-link fs-3 fw-bold nav-a-animation d-block d-lg-none"
+              href="{% url 'book:tweet'  %}"
+              ><span class="nav-item-span"
+                ><i class="bi bi-chat-square-text-fill me-2 nav-item-i"></i
+                >توییت</span
+              ></a
+            >
+            <!-- after lg,..-->
+            <a
+              class="nav-link fs-3 fw-bold me-2 nav-a-animation nav-light-a nav-dark-a d-none d-lg-block"
+              href="{% url 'book:tweet'  %}"
+              >توییت</a
+            >
+          </li>
+          <!-- درباره ما-->
+          <li class="nav-item nav-item-hover">
+            <!--befor lg-->
+            <a
+              class="nav-link fs-3 fw-bold nav-a-animation d-block d-lg-none"
+              href="{% url 'book:about_us' %}"
+              ><span class="nav-item-span"
+                ><i class="bi bi-info-circle me-2 nav-item-i"></i> درباره
+                ما</span
+              ></a
+            >
+            <!-- after lg-->
+            <a
+              class="nav-link fs-3 fw-bold me-2 nav-a-animation nav-light-a nav-dark-a d-none d-lg-block"
+              href="{% url 'book:about_us' %}"
+              >درباره ما</a
+            >
+          </li>
+          <!-- تماس با ما-->
+          <li class="nav-item nav-item-hover">
+            <!-- befor lg-->
+            <a
+              class="nav-link fs-3 fw-bold nav-a-animation d-block d-lg-none"
+              href="{% url 'book:contact_us' %}"
+              ><span class="nav-item-span"
+                ><i class="bi bi-chat-square-fill me-2 nav-item-i"></i> تماس با
+                ما</span
+              ></a
+            >
+            <!-- after lg-->
+            <a
+              class="nav-link fs-3 fw-bold me-2 nav-a-animation nav-light-a nav-dark-a d-none d-lg-block"
+              href="{% url 'book:contact_us' %}"
+              >تماس با ما</a
+            >
+          </li>
+            {#           پیام ها#}
+          <li class="nav-item nav-item-hover">
+            <!-- befor lg-->
+            <a
+              class="nav-link fs-3 fw-bold nav-a-animation d-block d-lg-none"
+              href="{% url 'book:chat' %}"
+              ><span class="nav-item-span"
+                ><i class="bi bi-chat-fill me-2 nav-item-i"></i>پیام ها
+                </span
+              ></a
+            >
+            <!-- after lg-->
+            <a
+              class="nav-link fs-3 fw-bold me-2 nav-a-animation nav-light-a nav-dark-a d-none d-lg-block"
+              href="{% url 'book:chat' %}"
+              >پیام ها</a
+            >
+          </li>
+{#            notification#}
+          <li class="nav-item nav-item-hover">
+            <!-- befor lg-->
+            <a
+              class="nav-link fs-3 fw-bold nav-a-animation d-block d-lg-none"
+              href="{% url 'book:notification' %}"
+              ><span class="nav-item-span"
+                ><i class="bi bi-bell-fill me-2 nav-item-i"></i>اعلان ها
+                </span
+              ></a
+            >
+            <!-- after lg-->
+            <a
+              class="nav-link fs-3 fw-bold me-2 nav-a-animation nav-light-a nav-dark-a d-none d-lg-block"
+              href="{% url 'book:notification' %}"
+              >اعلان ها</a
+            >
+          </li>
+
+        </ul>
+
+        <div class="d-flex align-items-center">
+        {% if request.user.is_authenticated %}
+
+          <span class="badge card_nav me-3 d-none d-lg-block position-relative" >
+            <a style="color: inherit" href="{% url 'book:show_detail_cart' %}"
+                  ><i class="bi bi-cart4" style="font-size: 1.8rem"></i
+                >
+                <span id="cart_count2" style="font-size: 0.7rem" class="position-absolute top-0 end-50 translate-middle badge rounded-pill bg-danger ">{{ request.user.cart_user.count }}</span>
+
+            </a>
+          </span>
+        {% endif %}
+
+          <!-- light mode , dark mode-->
+          <div
+            class="dropdown me-auto me-lg-3 mt-3 mt-lg-0"
+            style="direction: rtl"
+          >
+            <button
+              onclick="toggleTheme()"
+              class="btn btn-secondary dropdown-toggle d-flex align-items-center nav-dark-button nav-light-button"
+              type="button"
+              data-bs-toggle="dropdown"
+            >
+              <i
+                class="bi bi-brightness-high light-mode-icon me-1 text-dark"
+              ></i>
+              <i class="bi bi-moon-stars-fill dark-mode-icon me-1"></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a
+                  class="dropdown-item d-flex align-items-center"
+                  href="#"
+                  onclick="setTheme('light')"
+                >
+                  <i class="bi bi-brightness-high me-2"></i>
+                  <span class="fw-bold">روشن</span>
+                  <i class="bi bi-check2 ms-2 light-mode-text"></i>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item d-flex align-items-center"
+                  href="#"
+                  onclick="setTheme('dark')"
+                >
+                  <i class="bi bi-moon-stars-fill me-2"></i>
+                  <span class="fw-bold">تاریک</span>
+                  <i class="bi bi-check2 ms-2 dark-mode-text"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+          {% if request.user.is_authenticated %}
+          <div class="d-none d-lg-block">
+            <a class="nav-link" href="{% url 'book:user-logout' %}"
+              ><span class="badge text-white p-3 fs-5 nav-logout"
+                ><i class="bi bi-box-arrow-left me-2"></i>خروج</span
+              >
+            </a>
+          </div>
+
+          {% else %}
+          <!--ورود|عضویت -->
+          <!--buton login , register after lg mode-->
+          <div class="d-none d-lg-block">
+            <a class="nav-link" href="{% url 'book:user-login' %}"
+              ><span class="badge text-white p-3 fs-5 nav-log-reg"
+                ><i class="fa-regular fa-user me-3"></i>ورود | عضویت</span
+              >
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+
+
+<!--for light and dark mode-->
+<script>
+  function setTheme(themeName) {
+    document.getElementById("theme").href =
+      "{% static 'partials/' %}" + themeName + "-mode.css";
+    localStorage.setItem("theme", themeName);
+    if (themeName === "dark") {
+      document.querySelector(".dark-mode-text").style.display = "block";
+      document.querySelector(".dark-mode-icon").style.display = "block";
+    } else {
+      document.querySelector(".dark-mode-text").style.display = "none";
+      document.querySelector(".dark-mode-icon").style.display = "none";
+    }
+    if (themeName === "light") {
+      document.querySelector(".light-mode-text").style.display = "block";
+      document.querySelector(".light-mode-icon").style.display = "block";
+    } else {
+      document.querySelector(".light-mode-text").style.display = "none";
+      document.querySelector(".light-mode-icon").style.display = "none";
+    }
+  }
+  // بازیابی ترجیح تم از localStorage در هنگام بارگذاری صفحه
+  document.addEventListener("DOMContentLoaded", function () {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+  });
+</script>
+
+
+
+

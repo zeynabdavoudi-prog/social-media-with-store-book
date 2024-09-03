@@ -1,0 +1,48 @@
+/*width dropdown-menu light,dark mode*/
+.dropdown-menu{
+    --bs-dropdown-min-width: 4rem;
+}
+/*default bootstarp hover for link navbar*/
+.navbar-nav{
+    --bs-nav-link-hover-color:none;
+}
+
+@media (max-width: 992px) {
+    /*By default the offcanvas button was on the left, we put it on the right.problem?*/
+    .nav-direction{
+        direction: ltr;
+    }
+    /*solution. send links of window offcanvas to right*/
+    .nav-ul-direction{
+        direction: rtl;
+    }
+
+}
+/*ورود|عضویت */
+/*buton login , register after lg mode*/
+.nav-log-reg{
+    border-radius: 4.5rem;
+    background-color: #1b3b6f;
+    width: 10rem;
+}
+
+.nav-logout{
+    border-radius: 4.5rem;
+    background-color: #1b3b6f;
+    width: 6rem;
+}
+
+.card_nav{
+    color: #9EB3C2;
+    text-decoration: none;
+    background-color: #065a82;
+    border-radius: 0.4rem;
+    /*width: 2.5rem;*/
+    /*text-align: center;*/
+    /*height: 2.5rem;*/
+    /*padding: 0.5rem;*/
+
+}
+.cart_nav:hover{
+    background-color: #587a91;
+}

@@ -1,0 +1,116 @@
+
+/* Styling for the red dot */
+.red-dot {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    /* display: inline-block; */
+    margin-left: 5px;
+    flex: 1;
+}
+
+/* Styling for the chat container */
+.chat-container {
+    display: flex;
+}
+
+/* Styling for the left sidebar */
+.sidebar {
+    width: 40%;
+    height: 840px;
+    background-color: var(--background-color-card-rep);
+    padding: 10px;
+    border-top: 1px solid #9EB3C2;
+    border-right: 1px solid #9EB3C2;
+}
+@media (min-width: 991.98px) {
+    .sidebar{
+        width: 25%;
+    }
+}
+/* Styling for the chat content */
+.chat-content {
+     width: 80%;
+     /*background-color: #fff;*/
+     /*padding: 5px;*/
+    /*border-left: 1px solid #1C7293;*/
+    border-top: 1px solid #9EB3C2;
+}
+
+/* Styling for the chat messages */
+.chat-messages {
+     height: 70vh;
+     overflow-y: auto;
+     /*border: 1px solid #ccc;*/
+     border-radius: 5px;
+     padding: 10px;
+    background-color: var(--chat-background-color);
+}
+
+/* Styling for the textarea and send button */
+.message-input {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    margin-top: 5px;
+    background-color: var(--background-color-card-rep) ;
+}
+
+.send-button {
+    background-color: #1C7293;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 15px;
+    cursor: pointer;
+
+}
+.otherchat {
+    background-color: #587a91;
+    color: #fff;
+    max-width: 60%;
+    padding: 10px;
+    border-radius: 10px;
+    margin: 10px;
+    clear: both;
+    word-wrap: break-word;
+    float: left;
+}
+
+.chat-card  {
+     background-color: #9EB3C2;
+     color: #000;
+     max-width: 60%;
+     padding: 10px;
+     border-radius: 10px;
+     margin: 10px;
+     clear: both;
+     word-wrap: break-word;
+     float: right;
+}
+.img-profile-img{
+     width: 3.5rem;
+     height: 3.5rem;
+     border-radius: 50%;
+
+     border: 1px solid black;
+}
+.img-profile-i{
+     font-size: 3.5rem;
+
+     color: rgba(0, 0, 0, 0.8);
+
+}
+.text-color{
+    color:var(--color-text-report)
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link{
+     background-color: #1C7293;
+    margin-left: 0.5rem;
+}
+.navbar-color{
+    background-color: var(--background-color-card-rep);
+}

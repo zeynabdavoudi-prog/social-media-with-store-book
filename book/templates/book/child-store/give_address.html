@@ -1,0 +1,42 @@
+
+
+
+{% extends 'book/parent/base.html' %} {% load static %} {% block title %}Give Address
+ {% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/child-store/category.css' %}" />
+{% endblock %}
+{% block body %}
+
+{% if error %}
+    <div class="register-error" style="position:absolute; z-index: 105;top: 3rem;left: 20px;">
+        <p class="">{{ error }}</p>
+    </div>
+
+{% endif %}
+
+<div class="container price-color mb-5" style="margin-top: 6rem">
+    <div class="row justify-content-center " >
+        <div class="col-lg-11 col-xl-9 row-color p-3" style="border-radius: 1rem;box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px; ">
+            <div class="row align-items-center">
+                <div class="col-md-7 order-2 order-md-1">
+                    <label for="exampleFormControlInput1" class="form-label fw-bold fs-4">آدرس: </label>
+                    <form class=" mb-2" method="post" >
+                        {% csrf_token %}
+                        <input id="exampleFormControlInput1" class="form-control me-2 border border-black" placeholder="لطفا ادرس را کامل وارد کنید" aria-label="Search" name="location" value="{{ location }}">
+                        <div class="d-flex flex-row-reverse mt-3">
+                            <button class="btn btn-success  ms-2 px-4" type="submit">ثبت</button>
+                            <a href="{% url 'book:show_detail_cart' %}" class="btn btn-outline-success  px-4" type="submit">لغو</a>
+                        </div>
+                    </form>
+                    <span class="fs-5"><i class="bi bi-exclamation-triangle me-1 text-danger"></i>لطفا ادرس خود را به صورت استان_شهر_خیابان_کوچه_کدپستی وارد کنید.</span>
+
+                </div>
+                <div class="col-md-5 order-1">
+                    <img class="img-fluid" src="{% static 'image/map-1-97.svg' %}">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

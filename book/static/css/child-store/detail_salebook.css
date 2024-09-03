@@ -1,0 +1,228 @@
+.row-background-color{
+    background-color: var(--row-category-color);
+}
+.btn-primary {
+    background-color: #1C7293;
+}
+.btn-primary:hover {
+    background-color: #065A82;
+}
+.text-color{
+    color: var(--price-color);
+}
+.like_count{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.a-like{
+    text-decoration: none;
+    color: inherit;
+}
+.img-profile-img_chat{
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    border: 1px solid black;
+}
+.img-profile-i_chat{
+    font-size: 3.9rem;
+    display: inline-flex;
+    color: rgba(0, 0, 0, 0.8);
+
+}
+.img-profile-img{
+    width: 4.5rem;
+    height: 4rem;
+    border-radius: 50%;
+    /*border: 1px solid black;*/
+}
+.img-profile-i{
+    font-size: 3.9rem;
+    display: inline-flex;
+    color: rgba(0, 0, 0, 0.8);
+
+}
+@media (max-width: 991.98px) {
+    .col-main{
+        text-align: center;
+    }
+}
+
+@media (min-width: 1200px) {
+    .img-book{
+        width: 14rem;
+        height: 20rem;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1200px) {
+   .img-book{
+        width: 14rem;
+        height: 20rem;
+   }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .img-book{
+        width: 30rem;
+        height: 25rem;
+    }
+}
+
+.col_main{
+    background-color: var(--background-color-col-tweet-detail);
+    border-radius: 1rem;
+
+}
+.card-color-chat{
+    background-color: var(--background-color-col-tweet-detail);
+}
+
+.img-profile-img_comment{
+    margin-top: 0.7rem;
+    width: 3.8rem;
+    height: 3.8rem;
+    border-radius: 50%;
+    border: 1px solid black;
+}
+.img-profile-i_comment{
+    font-size: 3.8rem;
+    color: rgba(0, 0, 0, 0.8);
+
+}
+.btn-secondary3{
+    --bs-btn-bg: #065A82;
+    --bs-btn-border-color:#065A82;
+    --bs-btn-hover-bg:#1B3B6F;
+    --bs-btn-hover-border-color:#1B3B6F;
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color:#fff;
+    border-radius: 5rem;
+
+}
+.background-color-card-comment{
+    border-radius: 1rem;
+    background-color: var(--background-color-card-tweet-detail);
+    border: none;
+
+}
+.node{
+    margin-bottom: 1rem;
+    background-color: var(--color-node);
+    border-radius: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.textarea_tweet_detail{
+    border-radius: 1rem;
+    background-color: var(--background-color-card-tweet-detail);
+}
+
+.btn-secondary2{
+     --bs-btn-border-color:#1C7293;
+     --bs-btn-hover-border-color:#065A82;
+    --bs-btn-hover-bg:#065A82;
+     --bs-btn-color: #1C7293;
+    --bs-btn-hover-color:#fff;
+    border-radius: 5rem;
+}
+.title{
+    text-shadow: 1px 1px 2px #83a5bd;
+    background-color: var(--color-node);
+    border-radius: 0.8rem
+}
+
+.swiper {
+   width: 100%;
+   height: 100%;
+}
+
+.swiper-slide {
+   text-align: center;
+   font-size: 18px;
+   /*background: #fff;*/
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+@media (max-width: 760px) {
+   .swiper-button-next {
+        right: 20px;
+        transform: rotate(90deg);
+   }
+
+   .swiper-button-prev {
+        left: 20px;
+        transform: rotate(90deg);
+   }
+}
+
+.card-color{
+    background-color: var(--color-card-footer);
+}
+.dropdowon_position {
+    position: absolute;
+    left:3%;
+    top: 18%;
+}
+
+@media (min-width: 576px) and (max-width: 768px) {
+    .dropdowon_position {
+        position: absolute;
+        left:12%;
+        top: 18%;
+    }
+
+}
+
+@media (min-width: 768px) and (max-width: 992px) {
+    .dropdowon_position {
+        position: absolute;
+        left:11%;
+        top: 18%;
+    }
+
+}
+
+@media (min-width: 992px) and (max-width: 1200px) {
+    .dropdowon_position {
+        position: absolute;
+        left:8%;
+        top: 18%;
+    }
+
+}
+
+@media (min-width: 1200px)  {
+    .dropdowon_position {
+        position: absolute;
+        left:6%;
+        top: 18%;
+    }
+
+}
+.modal-content {
+    color: var(--modal-content-color);
+    background-color: var(--background-color-modal);
+}
+.modal-header {
+    border-bottom: 1px solid #9EB3C2;
+}
+.btn-secondary2 {
+    --bs-btn-border-color: #1C7293;
+    --bs-btn-hover-border-color: #065A82;
+    --bs-btn-hover-bg: #065A82;
+    --bs-btn-color: #1C7293;
+    --bs-btn-hover-color: #fff;
+    border-radius: 0.5rem;
+}
+.btn-secondary1 {
+    --bs-btn-bg: #1C7293;
+    --bs-btn-border-color: #1C7293;
+    --bs-btn-hover-bg: #065A82;
+    --bs-btn-hover-border-color: #065A82;
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color: #fff;
+}

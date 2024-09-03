@@ -1,0 +1,41 @@
+.share-error{
+    color:var(--color-error);
+    width: 20rem;
+    background-color: var(--background-color-error);
+    padding: 0.5rem;
+    border-bottom: 3px solid red;
+    border-radius: 10px;
+    animation:fadeout 10s forwards;
+}
+@keyframes fadeout {
+   0%{opacity: 1;}
+    75%{opacity: 0.7}
+    100%{opacity: 0}
+}
+/*.nav-display{*/
+/*    display: none;*/
+/*}*/
+/*.footer-display{*/
+/*    display: none;*/
+/*}*/
+
+.container-share{
+    margin-top: 10%;
+}
+@media (min-width: 767.98px) {
+    .form-control {
+    width: 60%;
+}
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+   .form-control {
+    width: 90%;
+}
+    .container{
+    margin-top: 20%;
+}
+}
+.text-color{
+    color: var(--text-color);
+}

@@ -1,0 +1,59 @@
+{% extends 'book/parent/base.html' %} {% load static %} {% block title %}Profile
+{% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/child-store/recommended_book_user.css' %}" />
+{% endblock %}
+{% block body %}
+
+        {% if form.errors %}
+        <div class="register-error" style="position:absolute; z-index: 105;top: 20px;left: 20px;" >
+              <span class="fw-bold fs-4"><i class="bi bi-x-circle-fill me-2 text-danger"></i>خطا</span>
+              {% for field in form %}
+                  {% if field.errors %}
+                      {% for error in field.errors %}
+                          <p class="fs-5"><span class="fw-bold">{{ field.label }}:</span>{{ error }}</p>
+                      {% endfor %}
+                  {% endif %}
+              {% endfor %}
+              {% if form.non_filed_errors %}
+                  {{ form.non_filed_errors }}
+              {% endif %}
+
+        </div>
+    {% endif %}
+
+    <div class="container text-color" style="margin-top: 5rem">
+        <div class="row align-items-center bg-color p-2">
+            <div class="col-lg-7 order-2 order-lg-1">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-6 mb-3">
+                            <label for="exampleFormControlInput1" class="form-label fs-5 fw-bold">نام کتاب</label>
+                            <input type="text" name="book_name" class="form-control border border-black" id="exampleFormControlInput1" >
+                        </div>
+                        <div class="col-lg-6 mb-3">
+                            <label for="exampleFormControlInput2" class="form-label fs-5 fw-bold">نام نویسنده</label>
+                            <input type="text" name="author" class="form-control border border-black" id="exampleFormControlInput2" >
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label fs-5 fw-bold">عکس کتاب</label>
+                        <input class="form-control border border-black" name="photo" type="file" id="formFile">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label fs-5 fw-bold">معرفی کتاب</label>
+                        <textarea class="form-control border border-black" name="body" id="exampleFormControlTextarea1"  rows="5"></textarea>
+                    </div>
+
+                    <input type="submit" class="btn btn-secondary1 px-4 fs-5" value="ثبت">
+                    <a class="btn btn-secondary2 ms-3 px-3 fs-5"  href="{% url 'book:user_profile' request.user.id %}">لغو</a>
+
+                </form>
+            </div>
+            <div class="col-lg-5 order-1 order-lg-2">
+                <img class="img-fluid" src="{% static 'image/book-lover-81.png' %}">
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

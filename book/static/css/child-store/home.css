@@ -1,0 +1,151 @@
+.carousel-control-prev{
+    justify-content: start;
+    padding: 1px;
+}
+.carousel-control-next{
+    justify-content: end;
+     padding: 1px;
+}
+
+@media (min-width: 991.98px) {
+    .img-carousel{
+        height: 30rem;
+    }
+    .carousel-caption_text1{
+        font-size: 3rem;
+    }
+    .carousel-caption_text2{
+        font-size: 2rem;
+    }
+    .carousel-caption_text3{
+        font-size: 1.3rem;
+    }
+
+
+}
+@media (max-width: 991.98px) {
+    .img-carousel{
+        height: 25rem;
+    }
+    .carousel-caption_text1{
+        font-size: 1.8rem;
+    }
+    .carousel-caption_text2{
+        font-size: 1.3rem;
+    }
+    .carousel-caption_text3{
+        font-size: 1rem;
+    }
+
+}
+.carousel-caption{
+    bottom: 35%;
+}
+
+.swiper {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 760px) {
+      .swiper-button-next {
+        right: 20px;
+        transform: rotate(90deg);
+      }
+
+      .swiper-button-prev {
+        left: 20px;
+        transform: rotate(90deg);
+      }
+}
+.hr{
+    border-top: 5px solid var(--hr-home);
+}
+.swiper-button-next, .swiper-button-prev{
+  color: black!important;
+}
+.salebook{
+    background-color: #9EB3C2;
+    border-radius: 2rem;
+    text-decoration: none;
+    color: #1B3B6F;
+    padding: 8px 15px;
+    font-size: 30px;
+    font-weight: bold;
+    border: #587a91 1px solid;
+    position: fixed;
+    bottom: 2rem;
+    left: 1rem;
+
+
+}
+.text-color{
+    color: var(--color-home);
+}
+
+.animation-color{
+  animation: pulse 3s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    background-color: #55b039;
+  }
+  50% {
+    background-color: #13a9e2;
+  }
+}
+
+.btn-secondary3{
+    --bs-btn-bg: #1C7293;
+    --bs-btn-border-color:#065A82;
+    --bs-btn-hover-bg:#1B3B6F;
+    --bs-btn-hover-border-color:#1B3B6F;
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color:#fff;
+    border-radius: 0.5rem;
+
+
+}
+.card-main{
+    width: 18rem;
+    height: 22rem;
+    perspective: 1500px;
+    position: relative;
+
+}
+
+.card-side{
+    position: absolute;
+    transition:all 1.5s linear;
+    backface-visibility: hidden;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+}
+
+.card-back{
+    background-color: #065A82;
+    transform: rotateY(180deg);
+
+}
+.card-main:hover .card-front{
+    transform: rotateY(-180deg);
+
+}
+.card-main:hover .card-back{
+    transform: rotateY(0);
+}
+.body-color{
+    background-color: var(--row-category-color);
+}

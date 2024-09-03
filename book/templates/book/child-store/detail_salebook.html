@@ -1,0 +1,667 @@
+{% extends 'book/parent/base.html' %} {% load static %} {% block title %}Detail Book
+ {% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/child-store/detail_salebook.css' %}" />
+ <!-- Link Swiper's CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+{% endblock %} {% block body %}
+{#show detail book#}
+<div class="container text-color" style="margin-top: 5rem;">
+    {% if book.user.id == request.user.id %}
+     <div class="dropdown dropdowon_position" >
+            <button class="btn  dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item border-bottom fw-bold" href="#" data-bs-toggle="modal" data-bs-target="#exampleModaldelete">حذف کتاب</a></li>
+                <li><a class="dropdown-item fw-bold" href="{% url 'book:updatebook' book.id %}">ویرایش کتاب</a></li>
+
+            </ul>
+     </div>
+    {% endif %}
+    <div class="row  justify-content-center row-background-color py-4 " style="border-radius: 1rem">
+
+        <div class=" col-xl-10" >
+            <div class="row col-main align-items-center">
+                <div class="col-lg-6 col-xl-6 ">
+                    <div class="row">
+                        <div class="col-lg-6 col-xl-6" style="padding: 0px">
+                           <img src="{{ book.photo.url }} " class="img-fluid img-book" >
+                        </div>
+                        <div class="col-lg-6 col-xl-6" style="padding: 0px">
+                            <p class="fw-bold mt-4 fs-2">{{ book.name_book }}</p>
+                            <span class="fs-4 ">نویسنده:{{ book.author }}</span>
+                            <br>
+                            <span class="fs-4">دسته بتدی:{{ book.category }}</span>
+                            <br>
+                            <span class="fs-4"> سال چاپ:{{ book.print_year }}</span>
+                            <br>
+                            <span class="fs-4"> نوبت چاب:{{ book.period_print }}</span>
+                            <br>
+                            <span class="fs-4"> تعداد صفحات:{{ book.number_of_page }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-xl-4 offset-xl-2 offset-lg-1 mt-4" >
+                    <div class="card m-auto shadow" style="width: 19rem;height: 14rem">
+                    <div class="card-body">
+                   <div class="d-flex justify-content-between mt-1 ">
+                       <h3 class="card-title ">قیمت:</h3>
+                       <h3 class="card-title">{{ book.price }}تومان</h3>
+                   </div>
+
+    <div class="text-center mt-4"><a data-book-id="{{ book.id }}" style="cursor: pointer;" type="button" class="cart btn btn-primary "><span class="fs-5">افزودن به سید خرید</span> </a></div>
+  </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between">
+                                <div class="dropdown dropup">
+                        <a class="btn  dropdown-toggle fw-bold " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        اشتراک گذاری
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item " href="{% url 'book:share_book' book.id %}">اشتراک گذاری با ایمیل</a></li>
+
+                            <li><a style="cursor: pointer" class="dropdown-item border-top" data-bs-toggle="modal" data-bs-target="#exampleModalShare">اشتراگ گذاری به کاربر</a></li>
+
+                        </ul>
+                    </div>
+                                {% if user_liked_book %}
+                                    <span> <span id="like_count" class="like_count">{{ like_count }}</span><a onclick="booklike({{ book.id }})"  class="a-like" ><i id="heart" class="bi bi-heart-fill ms-2 text-danger"></i></a></span>
+                                    {% else %}
+                                      <span> <span id="like_count" class="like_count">{{ like_count }}</span><a onclick="booklike({{ book.id }})" class="a-like" ><i id="heart" class="bi bi-heart ms-2 "></i></a></span>
+
+                                {% endif %}
+
+                            </div>
+                        </div>
+</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{#book introduction#}
+<div class="container text-color mt-3">
+<div class="row row-background-color p-4" style="border-radius: 1rem">
+    <h3 class="mb-3 py-1 px-3 title" style="text-shadow: 1px 1px 2px #83a5bd;">معرفی کتاب {{ book.name_book }}</h3>
+    <p class="fs-5">{{ book.book_introduction }}</p>
+</div>
+</div>
+{#Product seller#}
+<div class="container text-color mt-3">
+<div class="row row-background-color p-4" style="border-radius: 1rem">
+    <h3 class="mb-3 py-1 px-3 title" style="text-shadow: 1px 1px 2px #83a5bd;">فروشنده محصول</h3>
+    {% for profile in profiles %}
+        {% if profile.user.id == book.user.id %}
+            <div class="d-flex align-items-center">
+            {% if profile.file %}
+                <a href="{% url 'book:user_profile' profile.user.id %}">
+                 <img
+                 class="img-fluid img-profile-img"
+                 src="{{ profile.file.url }}"
+                 /></a>
+                 {% else %}
+                    <a href="{% url 'book:user_profile' profile.user.id %}">
+                    <i class="bi bi-person-circle img-profile-i" ></i
+                    ></a>
+
+            {% endif %}
+
+            <p class="align-self-end ms-2 ">{{ profile.user.username }}</p>
+
+            <a style="color: white;text-decoration: none;background-color: #587a91;border-radius: 0.5rem" class="ms-auto p-2 fw-bold" href="http://127.0.0.1:8000/chat/?user={{ profile.user.username }}">ارسال پیام به فروشنده</a>
+
+            </div>
+
+            {% if profile.bio %}
+                <p class="fs-5 mt-2"><span class="fw-bold"> بیوگرافی فروشنده:</span>{{ profile.bio }}</p>
+            {% endif %}
+
+        {% endif %}
+    {% endfor %}
+
+
+</div>
+</div>
+
+{#محصولات مرتبط#}
+<div class="container text-color mt-3 row-background-color p-4 mb-3" style="border-radius: 1rem;" >
+    <div class="row  " >
+         <h3 class="mb-5 py-1 px-3 title" >کتاب های مرتبط</h3>
+    </div>
+    <div class="row justify-content-center " >
+            <div class="swiper d-none d-md-block ">
+    <div class="swiper-wrapper ms-5">
+        {% for book_s in unique_books %}
+            <div class="swiper-slide ">
+                <div class="card card-color shadow" style="width: 14rem;height: 18rem">
+                <img src="{{ book_s.photo.url }}" class="card-img-top" alt="..." style="height: 12rem;">
+                <div class="card-body text-color">
+                <a href="{% url 'book:detail_salebook' book_s.id %} " style="color: inherit;text-decoration: none"><h5 class="card-title fw-bold">{{ book_s.name_book|truncatewords:3 }}</h5></a>
+                <p class="card-text fw-bold"> {{ book_s.price }}  تومان</p>
+                </div>
+            </div>
+            </div>
+        {% endfor %}
+
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev "></div>
+  </div>
+            <div class="d-md-none">
+                {% for book_s in unique_books %}
+
+                <div class="card m-auto card-color shadow mb-3" style="width: 14rem;height: 18rem">
+                <img src="{{ book_s.photo.url }}" class="card-img-top" alt="..." style="height: 12rem;">
+                <div class="card-body text-color">
+                <a href="{% url 'book:detail_salebook' book_s.id %} " style="color: inherit;text-decoration: none"><h5 class="card-title fw-bold">{{ book_s.name_book|truncatewords:3 }}</h5></a>
+                <p class="card-text fw-bold"> {{ book_s.price }}  تومان</p>
+                </div>
+            </div>
+
+        {% endfor %}
+            </div>
+
+
+    </div>
+</div>
+{#comments    #}
+<div class="container mt-4">
+  <div class="row justify-content-center text-color">
+    <div class="col-lg-12 col-xl-12 col_main ">
+    {% load mptt_tags %}
+{#       creat new comment#}
+      <div class="row mt-5 ">
+        <div class="d-flex justify-content-between">
+          <span class="fs-2 ms-3"
+            ><i class="bi bi-wechat text-danger me-2"></i
+            ><span class="fw-bold">نظرات</span></span
+          >
+
+          {% if request.user.is_authenticated %}
+          <div>
+            <a
+              style="border-radius: 5rem"
+              class="btn btn-primary fw-bold fs-5 px-4 mb-3"
+              data-bs-toggle="collapse"
+              href="#collapseExample"
+              role="button"
+              aria-expanded="false"
+              aria-controls="collapseExample"
+            >
+              ایجاد نظر جدید
+            </a>
+          </div>
+        </div>
+
+        <div class="collapse" id="collapseExample">
+          <div class="card card-body card-color-chat" style="border: none">
+            <div class="d-flex">
+              <div>
+                {% for profile in profiles %} {% if profile.user.id == request.user.id %}
+                 {% if profile.file %}
+                <a href="{% url 'book:user_profile' request.user.id %} "
+                  ><img
+                    class="img-fluid img-profile-img_comment"
+                    src="{{ profile.file.url }}"
+                /></a>
+                {% else %}
+                <a href="{% url 'book:user_profile' request.user.id %}"
+                  ><i class="bi bi-person-circle img-profile-i_comment"></i
+                ></a>
+                {% endif %} {% endif %} {% endfor %}
+              </div>
+              <div class="d-flex flex-column mt-3 ms-3">
+                <span style="margin-bottom: 0.3rem"
+                  ><a
+                    style="text-decoration: none; color: inherit"
+                    href="{% url 'book:user_profile' request.user.id %}"
+                    >{{ request.user.username }}</a
+                  ></span
+                >
+                <span class="opacity-70">ثبت نظر جدید</span>
+              </div>
+            </div>
+            <div class="row mt-4">
+              <form method="post" novalidate>
+                {% csrf_token %}
+                  {{ form.as_p }}
+                <div class="d-flex justify-content-end mt-3">
+                  <input
+                    type="submit"
+                    value="ارسال"
+                    class="btn btn-secondary3 fs-5 fw-bold px-5"
+                  />
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+{#        show comment #}
+      <div class="row mt-3 p-4" >
+
+            {% recursetree comments %}
+            {% if node.user.id not in  blocked_user_ids  or  not request.user.is_authenticated %}
+            <div class="node" >
+        <div id="{{ node.id }}"
+          class="card background-color-card-comment  text-color m-auto"
+          style="width: 95%"
+        >
+          <div class="card-body">
+            <div class="card-title">
+                {% if node.parent %}
+            <div class="d-flex">
+
+                <span class="fw-bold" style="font-size: 1.3rem;color: #1C7293"> <i class="bi bi-square-fill" style="font-size: 0.8rem;color: #9EB3C2"></i> در پاسخ به{{ node.parent.user.username }}</span>
+
+
+            {% if request.user.is_authenticated %}
+                <div class="ms-auto fs-4">
+                  <a onclick="myFunction({{ node.id }})">
+                    <i style="color: #1C7293" class="bi bi-repeat"></i>
+                  </a>
+                </div>
+                {% endif %}
+            </div>
+                    {% endif %}
+              <div class="d-flex">
+                <div>
+                  {% for profile in profiles %} {% if profile.user.id == node.user.id  %}
+
+                   {% if profile.file %}
+                  <a href="{% url 'book:user_profile' node.user.id %} "
+                    ><img
+                      class="img-fluid img-profile-img_comment"
+                      src="{{ profile.file.url }}"
+                  /></a>
+                  {% else %}
+                  <a href="{% url 'book:user_profile' node.user.id %}"
+                    ><i class="bi bi-person-circle img-profile-i_comment"></i
+                  ></a>
+                  {% endif %} {% endif %} {% endfor %}
+                </div>
+                <div class="d-flex flex-column mt-3 ms-3">
+                  <span style="margin-bottom: 0.3rem"
+                    ><a
+                      style="text-decoration: none; color: inherit"
+                      href="{% url 'book:user_profile' node.user.id %}"
+                      >{{ node.user.username }}</a
+                    ></span
+                  >
+                  <span class="opacity-70"
+                    >{{ node.created_at|date:"Y-m-d" }}</span
+                  >
+                </div>
+                {% if request.user.is_authenticated  and not node.parent%}
+                <div class="ms-auto fs-4">
+                  <a onclick="myFunction({{ node.id }})">
+                    <i style="color: #1C7293" class="bi bi-repeat"></i>
+                  </a>
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            <hr />
+            <p class="card-text fs-5">{{ node.body }}</p>
+                <div class="d-flex flex-row-reverse">
+{#                show dislikecomment#}
+                {% if node.id in commnet_dislike_request_user_id %}
+
+                    <div class="d-flex flex-row-reverse">
+                        <a onclick="commentdislike{{ node.id }}({{ node.id }})" style="text-decoration: none;color: inherit">
+                            <span>
+                                <span id="node_countdis{{ node.id }}" class="fw-bold">{{ node.cbcdvote.count }}</span>
+                                <i id="heartdis{{ node.id }}"  class="bi bi-hand-thumbs-down-fill  ms-1"></i>
+                            </span>
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="d-flex flex-row-reverse">
+                        <a onclick="commentdislike{{ node.id }}({{ node.id }})"  style="text-decoration: none;color: inherit">
+                            <span>
+                                <span id="node_countdis{{ node.id }}" class="fw-bold">{{ node.cbcdvote.count }}</span>
+                                <i id="heartdis{{ node.id }}" class="bi bi-hand-thumbs-down ms-1"></i>
+                            </span>
+
+                        </a>
+                    </div>
+                {% endif %}
+{#                show like comment#}
+                {% if node.id in commnet_like_request_user_id %}
+
+                    <div class="d-flex flex-row-reverse me-3">
+                        <a onclick="commentlike{{ node.id }}({{ node.id }})" style="text-decoration: none;color: inherit">
+                            <span>
+                                <span id="node_count{{ node.id }}" class="fw-bold">{{ node.cbclvote.count }}</span>
+                                <i id="heart{{ node.id }}"  class="bi bi-hand-thumbs-up-fill text-danger  ms-1"></i>
+                            </span>
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="d-flex flex-row-reverse me-3">
+                        <a onclick="commentlike{{ node.id }}({{ node.id }})"  style="text-decoration: none;color: inherit">
+                            <span>
+                                <span id="node_count{{ node.id }}" class="fw-bold">{{ node.cbclvote.count }}</span>
+                                <i id="heart{{ node.id }}" class="bi bi-hand-thumbs-up ms-1"></i>
+                            </span>
+
+                        </a>
+                    </div>
+                {% endif %}
+{#                 ajax comment like#}
+                <script>
+                    function commentlike{{ node.id }}(node_id){
+                        var element = document.getElementById('heart'+node_id)
+                        var count = document.getElementById('node_count'+ node_id )
+
+                        var elementdis = document.getElementById('heartdis'+node_id)
+                        var countdis = document.getElementById('node_countdis'+ node_id )
+
+                        $.get(`/like/Book/Commnet/${node_id}/like`).then(response =>{
+                            if (response['response'] === 'liked'){
+
+
+                                element.className = 'bi bi-hand-thumbs-up-fill text-danger  ms-1'
+                                count.innerText = Number(count.innerText) + 1
+                            }
+                            if (response['response'] === 'unliked'){
+
+
+                                element.className = 'bi bi-hand-thumbs-up ms-1'
+                                count.innerText = Number(count.innerText) - 1
+
+                            }
+                            if (response['response'] === 'liked_delete dislike'){
+
+
+                                element.className = 'bi bi-hand-thumbs-up-fill text-danger  ms-1'
+                                count.innerText = Number(count.innerText) + 1
+
+                                elementdis.className = 'bi bi-hand-thumbs-down ms-1'
+                                countdis.innerText = Number(countdis.innerText) - 1
+
+                            }
+
+                        })
+
+                    }
+                </script>
+{#                ajax comment dislike#}
+                <script>
+                    function commentdislike{{ node.id }}(node_id){
+                        var element = document.getElementById('heartdis'+node_id)
+                        var count = document.getElementById('node_countdis'+ node_id )
+
+                        var elementlike = document.getElementById('heart'+node_id)
+                        var countlike = document.getElementById('node_count'+ node_id )
+
+                        $.get(`/like/Book/Commnet/${node_id}/dislike`).then(response =>{
+                            if (response['response'] === 'dislike'){
+
+
+                                element.className = 'bi bi-hand-thumbs-down-fill  ms-1'
+                                count.innerText = Number(count.innerText) + 1
+                            }
+                            if (response['response'] === 'undislike'){
+
+
+                                element.className = 'bi bi-hand-thumbs-down ms-1'
+                                count.innerText = Number(count.innerText) - 1
+
+                            }
+                            if (response['response'] === 'dislike_delete like'){
+
+
+                                element.className = 'bi bi-hand-thumbs-down-fill  ms-1'
+                                count.innerText = Number(count.innerText) + 1
+
+                                elementlike.className = 'bi bi-hand-thumbs-up  ms-1'
+                                countlike.innerText = Number(countlike.innerText) - 1
+
+                            }
+
+                        })
+
+                    }
+                </script>
+                </div>
+
+
+
+          </div>
+
+        </div>
+
+                 {% if not node.is_leaf_node %}
+        <div class="children " >
+
+          {{ children }}
+        </div>
+        {% endif %}
+            </div>
+            {% endif %}
+      {% endrecursetree %}
+
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+{# ajax like book#}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+   function booklike(book_id){
+                        var element = document.getElementById('heart')
+                        var count = document.getElementById("like_count" )
+                        $.get(`/like/book/${book_id}`).then(response =>{
+
+                            if (response['response'] === 'liked'){
+
+                                element.className = 'bi bi-heart-fill ms-2 text-danger'
+                                count.innerText = Number(count.innerText) + 1
+                            }
+                            else {
+
+                                element.className = 'bi bi-heart ms-2'
+                                count.innerText = Number(count.innerText) - 1
+                            }
+                        })
+
+                    }
+</script>
+
+{#reply to reply#}
+<script>
+  function formExit() {
+    document.getElementById("newForm").remove();
+  }
+
+  function myFunction(id) {
+    if (document.contains(document.getElementById("newForm"))) {
+      document.getElementById("newForm").remove();
+    }
+
+    var d1 = document.getElementById(id);
+    d1.insertAdjacentHTML('afterend',
+      '<form novalidate id="newForm" class="form-insert py-2" method="post"> \
+                <select name="parent" class="d-none" id="id_parentt"> \
+                <option value="' + id + '" selected="' + id + '"></option> \
+                </select> \
+               <p>\
+    <label class="fs-5" for="id_body">متن پیام:</label>\
+    <textarea  name="body" cols="5" rows="3" class="w-100  p-3 fs-5 textarea_tweet_detail " placeholder="نظر خود را بنویسید..." maxlength="500" required="" aria-invalid="true" id="id_body"></textarea>\
+  </p>\
+                {% csrf_token %} \
+                 <div class="mt-3 d-flex justify-content-end "><div><button style="border-radius: 1rem;" type="button" class="btn btn-secondary2 fs-5 px-5 me-2" onclick="formExit()"">لغو</button></div>\
+                <button style="border-radius: 1rem;" type="submit" class="btn btn-secondary3 fs-5 px-5">ارسال</button></div>  \
+              </form>');
+
+    //document.querySelector('#id_parentt [value="' + id + '"]').selected = true;
+  }
+
+  $('#myForm').trigger("reset");
+</script>
+
+{#modal share tweet to user#}
+<div class="modal fade" id="exampleModalShare" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">اشتراک گذاری به:</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <div class="container">
+      <div class="row text-center">
+        {% for frnd in frnds %}
+            {% for profile in profiles %}
+                {% if profile.user.id == frnd.id %}
+                    <div class="col-4">
+                    {% if profile.file %}
+
+                        <a onclick="ShareTweet('{{ profile.user.id }}')"
+                        ><img
+                        class="img-fluid img-profile-img_chat"
+                        src="{{ profile.file.url }}"
+                        /></a>
+                         <p style="margin-top: 0.2rem">{{ profile.user.username }}</p>
+
+                    {% else %}
+                        <a onclick="ShareTweet('{{ profile.user.id }}')"
+                        ><i class="bi bi-person-circle img-profile-i_chat" ></i
+                        ></a>
+                         <p>{{ profile.user.username }}</p>
+                    {% endif %}
+
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+      </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+{#ajax for modal share tweet to user#}
+<script>
+function ShareTweet(user_id){
+
+    $.get(`/share_book_chat/{{book.id}}/${user_id}`)
+    $('#exampleModalShare').modal('hide');
+
+}
+</script>
+
+
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<!-- Initialize Swiper -->
+<script>
+  var swiper = new Swiper(".swiper", {
+    {#slidesPerView: 4,#}
+    direction: getDirection(),
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    on: {
+      resize: function () {
+        swiper.changeDirection(getDirection());
+      },
+    },
+    breakpoints: {
+
+      768: {
+        slidesPerView: 3,
+      },
+      1200: {
+        slidesPerView: 4,
+      }
+    }
+  });
+
+  function getDirection() {
+    var windowWidth = window.innerWidth;
+    var direction = window.innerWidth <= 760 ? "vertical" : "horizontal";
+
+    return direction;
+  }
+</script>
+
+<!-- Modal delete -->
+<div class="modal fade" id="exampleModaldelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 " id="exampleModalLabel">حذف کتاب</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body fs-4 ">
+        ایا میخواهید این کتاب را از لیست فروش کتاب ها حذف کنید؟
+      </div>
+      <div class="modal-footer" style="border-top:none;">
+        <button type="button" class="btn btn-secondary2" data-bs-dismiss="modal">لغو</button>
+        <a type="button" class="btn btn-secondary1" href="{% url 'book:deletebook' book.id %}" >حذف</a>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    function getCsrfToken() {
+        return $('#csrf-form input[name="csrfmiddlewaretoken"]').val();
+    }
+
+    $('.cart').click(function() {
+        var bookId = $(this).data('book-id');
+        console.log("Book ID: ", bookId);
+        $.ajax({
+            type: 'POST',
+            url: '{% url "book:add_to_cart" %}',
+            data: {
+                'book_id': bookId,
+                'csrfmiddlewaretoken': getCsrfToken()
+            },
+            success: function(response) {
+                console.log("AJAX Success Response: ", response);
+                if (response.cart_count !== undefined) {
+                    console.log("Attempting to update cart count"); // پیام دیباگ جدید
+                    var cartCountElement1 = $('#cart_count1');
+                    var cartCountElement2 = $('#cart_count2');
+                    if (cartCountElement1.length > 0) {
+                        cartCountElement1.text(response.cart_count);
+                        cartCountElement2.text(response.cart_count);
+
+                        alert(response.msg);
+                        console.log("Cart count updated: ", response.cart_count);
+                    } else {
+                        console.error("#cart_count element not found in DOM"); // پیام خطای جدید
+                    }
+                } else {
+                    alert('Error: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', xhr.responseText);
+                console.error('Status:', status);
+                console.error('Error:', error);
+            }
+        });
+    });
+});
+
+</script>
+{% endblock %}

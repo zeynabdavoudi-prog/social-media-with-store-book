@@ -1,0 +1,87 @@
+{% extends 'book/parent/base.html' %} {% load static %} {% block title %}Update Requested Book
+{% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/child-store/recommended_book_user.css' %}" />
+{% endblock %}
+{% block body %}
+
+        {% if form.errors %}
+        <div class="register-error" style="position:absolute; z-index: 105;top: 20px;left: 20px;" >
+              <span class="fw-bold fs-4"><i class="bi bi-x-circle-fill me-2 text-danger"></i>خطا</span>
+              {% for field in form %}
+                  {% if field.errors %}
+                      {% for error in field.errors %}
+                          <p class="fs-5"><span class="fw-bold">{{ field.label }}:</span>{{ error }}</p>
+                      {% endfor %}
+                  {% endif %}
+              {% endfor %}
+              {% if form.non_filed_errors %}
+                  {{ form.non_filed_errors }}
+              {% endif %}
+
+        </div>
+    {% endif %}
+
+    <div class="container text-color" style="margin-top: 5rem">
+        <div class="row align-items-center bg-color p-3">
+            <div class="col-lg-6 col-xl-7 order-2   order-lg-1">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-6 mb-3">
+                           <label  class="form-label fw-bold fs-5">اسم کتاب</label>
+                           {{ form.name_book }}
+                        </div>
+                        <div class="col-lg-6 mb-3">
+                            <label for="exampleFormControlInput2" class="form-label fs-5 fw-bold">نام نویسنده</label>
+                            {{ form.author }}
+                        </div>
+                        <div class="col-lg-6 mb-3">
+                            <label for="exampleFormControlInput2" class="form-label fs-5 fw-bold">سال چاپ</label>
+                            {{ form.print_year }}
+                        </div>
+                        <div class="col-lg-6 mb-3">
+                             <div class="mb-3">
+                                <label for="form_select" class="form-label fw-bold text-color fs-5">موضوع و دسته بندی</label>
+                                <select class="form-select border-black " id="form_select" aria-label="Default select example" name="category" style="padding: 0.6rem">
+                                    <option selected>{{ book.category }}</option>
+                                    <option value="رمان">رمان</option>
+                                    <option value="روانشناسی">روانشناسی</option>
+                                    <option value="شعر و ادبیات">شعر و ادبیات</option>
+                                    <option value="کودک و نوجوان">کودک و نوجوان</option>
+                                    <option value="فلسفه و عرفان">فلسفه و عرفان</option>
+                                    <option value="کتاب زبان">کتاب زبان</option>
+                                    <option value="کتاب درسی">کتاب درسی</option>
+                                    <option value="مدیریت و اقتصاد">مدیریت و اقتصاد</option>
+                                    <option value="تاریخ و جغرافیا">تاریخ و جغرافیا</option>
+                                    <option value="کتاب دانشگاهی">کتاب دانشگاهی</option>
+                                    <option value="خانواده و سبک زندگی">خانواده و سبک زندگی </option>
+                                    <option value="مذهبی">مذهبی </option>
+                                    <option value="زندگی و سفر نامه">زندگی و سفر نامه </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="exampleFormControlInput2" class="form-label fs-5 fw-bold">توضیحات:</label>
+                        {{ form.Description }}
+
+                    </div>
+
+
+                    <input type="submit" class="btn btn-secondary1 mt-5 px-4 fs-5" value="ثبت">
+                    <a class="btn btn-secondary2 ms-3 px-3 mt-5 fs-5"  href="{% url 'book:detail_requested_book' book.id %}">لغو</a>
+
+                </form>
+            </div>
+            <div class="col-lg-6 col-xl-5 order-1   order-lg-2">
+                <div class="text-center">
+                    <img class="img-fluid" src="{% static 'image/under-constructions-65.png' %}" >
+
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

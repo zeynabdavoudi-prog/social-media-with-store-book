@@ -1,0 +1,40 @@
+.text-color{
+    color: var(--text-color-about-us);
+}
+.hero-img {
+    position: relative;
+}
+
+
+
+.hero-photo {
+    max-width: 25rem;
+    max-height: 31rem;
+    border-radius:8px;
+    position: relative;
+}
+
+.hero-img::before {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 500px;
+    border: 0.25rem solid #354f52;
+    border-radius: 10px;
+    top: 2rem;
+    right: -2rem;
+}
+
+@media (max-width: 991.98px) {
+    .hero-img::before {
+        display: none;
+    }
+    .center-img{
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    video{
+        width: 45rem;
+    }
+
+}

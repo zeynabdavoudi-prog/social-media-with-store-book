@@ -1,0 +1,64 @@
+{% extends 'book/parent/base.html' %} {% load static %} {% block title %}Report
+{% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/children/report.css' %}" />
+{% endblock %} {% block body %}
+{% if form.errors %}
+    <div class="report-error" style="position:absolute;top: 5rem;left: 20px;" >
+        <span class="fw-bold fs-4"><i class="bi bi-x-circle-fill me-2 text-danger"></i>خطا</span>
+        {% for field in form %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <p class="fs-5"><span class="fw-bold">{{ field.label }}:</span>{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+           {% if form.non_filed_errors %}
+               {{ form.non_filed_errors }}
+           {% endif %}
+
+    </div>
+{% endif %}
+<div class="container color_text" style="margin-top: 7%">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-8 main-col p-5">
+      <div class="row">
+        <span class="h3">
+          <i class="bi bi-exclamation-circle me-2 text-primary"></i
+          ><span class="fw-bold"
+            >چه نوع مشکلی را داردید گزارش می کنید؟</span
+          ></span
+        >
+      </div>
+      <div class="row align-items-center">
+        <div class="col-md-6 order-2 order-md-1">
+          <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="">
+              <label for="exampleFormControlTextarea1" class="form-label fs-4"
+                >علت ریپورت :</label
+              >
+              <textarea
+                class="form-control border border-dark color-textarea"
+                id="exampleFormControlTextarea1"
+                rows="6"
+                name="body"
+              ></textarea>
+            </div>
+            <div class="row">
+              <input
+                type="submit"
+                class="mt-4 btn btn-secondary1"
+                value="ارسال"
+              />
+            </div>
+          </form>
+        </div>
+        <div class="col-md-6 order-1">
+          <img src="{% static 'image/report-analysis-1-90.svg' %}" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

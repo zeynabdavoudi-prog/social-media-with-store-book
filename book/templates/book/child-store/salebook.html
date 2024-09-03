@@ -1,0 +1,120 @@
+{% extends 'book/parent/base.html' %} {% load static %} {% block title %}SaleBook
+{% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/child-store/salebook.css' %}" />
+{% endblock %}
+{% block body %}
+{#show error#}
+    {% if form.errors %}
+        <div class="salebook_error" style="position:absolute;z-index:100;top: 50px;left: 20px;" >
+              <span class="fw-bold fs-4"><i class="bi bi-x-circle-fill me-2 text-danger"></i>خطا</span>
+              {% for field in form %}
+                  {% if field.errors %}
+                      {% for error in field.errors %}
+                          <p class="fs-5"><span class="fw-bold">{{ field.label }}:</span>{{ error }}</p>
+                      {% endfor %}
+                  {% endif %}
+              {% endfor %}
+              {% if form.non_filed_errors %}
+                  {{ form.non_filed_errors }}
+              {% endif %}
+
+        </div>
+    {% endif %}
+
+    <div class="container text-color mt-4" >
+        <div class="row mb-5 row-1 align-items-center" >
+            <div  class="col-md-6 order-2 order-md-1" >
+                <h1 class="text-1 fw-bold">کتاب هاتو سریع، راحت و مطمئن بفروش</h1>
+                <h2 class="text-2 fw-bold" >و بهشون خانه و خواننده ای جدید هدیه بده.</h2>
+                <h1 class="text-3 mt-4" >_خرید و فروش آسان و سریع کتاب های دسته دوم</h1>
+                <h1 class="text-3" >_جستجوی سریع و آسان برای کتاب های مورد نظرتان</h1>
+                <h1 class="text-3" >_فرصتی برای بهره مندی از کتاب های دسته دوم با قیمت مناسب</h1>
+
+            </div>
+            <div class="col-md-6 order-1" >
+                <img class="img-fluid" src="{% static 'image/10_preview_rev_1.png' %}">
+            </div>
+        </div>
+        <div class="row text-center ">
+            <p class="fs-3 row-2 fw-bold">مشخصات کتاب</p>
+        </div>
+        <form method="post" novalidate enctype="multipart/form-data">
+        <div class="row row-3 p-3" >
+
+            {% csrf_token %}
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label fs-5">نام کتاب</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput1" name="name_book" >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput2" class="form-label fs-5">نویسنده</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput2" name="author" >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput6" class="form-label fs-5" >قیمت </label>
+                    <input type="text" class="form-control" id="exampleFormControlInput6" placeholder="قیمت به تومان" name="price">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput3" class="form-label fs-5">سال چاپ</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput3" name="print_year" >
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput4" class="form-label fs-5">نوبت چاپ</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput4" name="period_print">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput5" class="form-label fs-5">تعداد صفحات</label>
+                    <input type="text" class="form-control" id="exampleFormControlInput5" name="number_of_page">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                <label for="form_select" class="form-label fs-5">موضوع و دسته بندی</label>
+                <select class="form-select" id="form_select" aria-label="Default select example" name="category">
+                    <option selected>رمان</option>
+                    <option value="روانشناسی">روانشناسی</option>
+                    <option value="شعر و ادبیات">شعر و ادبیات</option>
+                    <option value="کودک و نوجوان">کودک و نوجوان</option>
+                    <option value="فلسفه و عرفان">فلسفه و عرفان</option>
+                    <option value="کتاب زبان">کتاب زبان</option>
+                    <option value="کتاب درسی">کتاب درسی</option>
+                    <option value="مدیریت و اقتصاد">مدیریت و اقتصاد</option>
+                    <option value="تاریخ و جغرافیا">تاریخ و جغرافیا</option>
+                    <option value="کتاب دانشگاهی">کتاب دانشگاهی</option>
+                    <option value="خانواده و سبک زندگی">خانواده و سبک زندگی </option>
+                    <option value="مذهبی">مذهبی </option>
+                    <option value="زندگی و سفر نامه">زندگی و سفر نامه </option>
+                </select>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput7" class="form-label fs-5">عکس</label>
+                    <input type="file" class="form-control" id="exampleFormControlInput7" name="photo">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">معرفی کتاب</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" placeholder="توضیحاتی در مورد کتاب..." name="book_introduction"></textarea>
+            </div>
+            <input class="fs-5 fw-bold  btn btn-outline-secondary" type="submit" value="ثبت" >
+
+        </div>
+        </form>
+
+
+
+    </div>
+{% endblock %}

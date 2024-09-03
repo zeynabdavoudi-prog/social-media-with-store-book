@@ -1,0 +1,35 @@
+.footer-footer{
+    /*position: absolute;*/
+    /*bottom: 0px;*/
+    /*right: 0px;*/
+    /*left: 0px;*/
+
+}
+/* the rectangular part of footer*/
+.footer-maindiv{
+    background-color: var(--wave-color);
+    color: var(--content-footer);
+}
+.footer-link{
+    text-decoration: none;
+    color:var(--content-footer);
+    transition: 0.6s;
+}
+
+.footer-link:hover{
+    color: var(--footer-link-hover);
+    font-weight: bold;
+}
+.footer-icon{
+    color: black;
+}
+ /*text align befor md*/
+.footer-mainrow {
+    text-align: center;
+}
+/*text align after md,..*/
+@media (min-width: 768px) {
+    .footer-mainrow {
+        text-align: right;
+    }
+}

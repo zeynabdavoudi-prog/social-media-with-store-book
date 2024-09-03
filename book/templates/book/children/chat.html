@@ -1,0 +1,152 @@
+{% extends 'book/parent/base.html' %} {% load static %} {% block title %}Chat
+{% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/children/chat.css' %}" />
+{% endblock %} {% block body %}
+
+
+    <div class="main" style="direction: ltr" >
+        <div class="d-flex align-items-start chat-container ">
+            <div class="sidebar overflow-y-auto ">
+                <nav class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <h4 class="fw-bold " style="direction: rtl;color: #1C7293;margin-bottom: 2.2rem">کاربران:</h4>
+                    <div style="border-bottom: #9EB3C2 1px solid;"></div>
+                    {% for frnd in frnds %}
+                     <div class="d-flex align-items-center " style="padding-left: 0.5rem">
+                     {% for profile in profiles %}
+                         {% if profile.user.id == frnd.id %}
+                             {% if profile.file %}
+                                <a href="{% url 'book:user_profile' profile.user.id %}"
+                                ><img
+                                class="img-fluid mb-3 img-profile-img"
+                                src="{{ profile.file.url }}"
+                                /></a>
+                             {% else %}
+                                <a href="{% url 'book:user_profile' profile.user.id %}"
+                                ><i class="bi bi-person-circle  mb-3 img-profile-i" ></i
+                                ></a>
+                            {% endif %}
+                         {% endif %}
+                     {% endfor %}
+                    <a class="nav-link text-color" href="/chat/?user={{frnd.username}}" role="tab" aria-controls="v-pills-home" aria-selected="false">{{frnd.username}}</a>
+                     </div>
+                    {% endfor %}
+
+                </nav>
+            </div>
+            <div class="chat-content">
+                <div class="navbar navbar-color">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="#">
+                            <h2 id="username">  <span class="red-dot"></span></h2>
+
+                        </a>
+                    </div>
+                </div>
+                <div class="chat-messages">
+                    {% for key, chat in chats.items %}
+                        {% if chat.user == 'me' %}
+                            <div class="chat-card">
+                                 {% if 'http' not in chat.msg %}
+                                      {{chat.msg}}
+                                     {% else %}
+                                      <a href="{{ chat.msg }}">{{ chat.msg }}</a>
+                                 {% endif %}
+
+                            </div>
+                        {% else %}
+                            <div class="otherchat">
+                                {% if 'http' not in chat.msg %}
+                                      {{chat.msg}}
+                                     {% else %}
+                                      <a href="{{ chat.msg }}">{{ chat.msg }}</a>
+                                 {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div>
+                    <textarea style="direction: rtl" class="message-input" cols="100" rows="3" placeholder="پیام خود را بنویسید..."></textarea>
+                    <button class="send-button fs-5 fw-bold">ارسال پیام</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+            // Get the query parameter 'user' from the URL
+            const queryParams = new URLSearchParams(window.location.search);
+            const user = queryParams.get("user");
+            document.getElementById('username').textContent = user
+
+
+            // Activate the tab based on the 'user' query parameter
+            const tab = document.querySelector(`[href="/chat/?user=${user}"]`);
+            if (tab) {
+                tab.classList.add("active");
+                tab.setAttribute("aria-selected", "true");
+                document.getElementById('username').textContent = user
+
+            }
+            if (user === null) {
+                const chatContent = document.querySelector('.chat-content');
+                chatContent.style.display = 'none';
+            }
+            var sendButton = document.querySelector(".send-button");
+            var textarea = document.querySelector(".message-input");
+            var chatMessages = document.querySelector(".chat-messages");
+            var ws;
+
+            // Function to append a received message to chat messages
+            function appendMessage(user, message) {
+                const chatCard = document.createElement("div");
+                chatCard.classList.add(user === "me" ? "chat-card" : "otherchat");
+                chatCard.innerHTML = `<p>${message}</p>`;
+                chatMessages.appendChild(chatCard);
+            }
+
+            // Function to send a message via WebSocket
+            function sendMessage(message) {
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ user: user, msg: message }));
+                }
+            }
+
+            // Connect to the WebSocket server
+            ws = new WebSocket("ws://127.0.0.1:8000/ws/wsc/");
+
+            // Handle WebSocket connection open
+            ws.addEventListener("open", function (event) {
+                console.log("WebSocket connection opened.");
+            });
+
+            // Handle WebSocket message received
+            ws.addEventListener("message", function (event) {
+                console.log(event.data)
+                appendMessage("frnd",event.data);
+            });
+
+            // Handle WebSocket close
+            ws.addEventListener("close", function (event) {
+                console.log("WebSocket connection closed.");
+            });
+
+            // Handle Send button click
+            sendButton.addEventListener('click', function () {
+                const messageText = textarea.value;
+
+                if (messageText.trim() !== "") {
+                    sendMessage(messageText);
+
+                    // Append the sent message to chat messages
+                    appendMessage("me", messageText);
+
+                    // Clear the textarea
+                    textarea.value = "";
+                }
+            });
+        });
+
+
+    </script>
+
+{% endblock %}

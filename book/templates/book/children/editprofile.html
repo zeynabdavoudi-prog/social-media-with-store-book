@@ -1,0 +1,57 @@
+
+{% extends "book/parent/base.html" %} {% load static %} {% block title %} Edit
+Profile {% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/children/editprofile.css' %}" />
+{% endblock %} {% block body %}
+
+<div class="card" style="position: relative">
+  {% if profile.background_image_profile %}
+  <img
+    src="{{ profile.background_image_profile.url }}"
+    class="card-img background_image_profile"
+    alt="..."
+  />
+  {% else %}
+  <div class="background_image_profile" style="background-color: #1c7293"></div>
+  {% endif %} {% if profile.file %}
+  <img src="{{ profile.file.url }}" class="profile_file" />
+  {% else %}
+  <span><i class="bi bi-person-circle profile_icon"></i></span>
+  {% endif %}
+</div>
+
+<div class="container mt-5 editprofile-text-color">
+  <div class="row text-center">
+    <h1 class="fw-bold">ویرایش نمایه</h1>
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    <div class="row align-items-end mt-3">
+      <div class="col-md-6 mb-1">
+        {{ form.first_name.label_tag }} {{ form.first_name }}
+      </div>
+      <div class="col-md-6 mb-1">
+        {{ form.last_name.label_tag }} {{ form.last_name }}
+      </div>
+      <div class="col-md-6 mb-1">
+        {{ form.date_of_birth.label_tag }} {{ form.date_of_birth }}
+      </div>
+      <div class="col-md-6 mb-1 ">
+        {{ form.Location.label_tag }} {{ form.Location }}
+      </div>
+      <div class="col-12 mb-1">{{ form.bio.label_tag }} {{ form.bio }}</div>
+
+      <div class="col-md-6 mb-1">
+        {{ form.background_image_profile.label_tag }} {{form.background_image_profile }}
+
+      </div>
+      <div class="col-md-6 mb-1">{{ form.file.label_tag }} {{ form.file }}</div>
+
+      {% csrf_token %}
+    </div>
+    <input type="submit" value="ذخیره" class="btn btn-primary fs-4 mt-3" />
+    <a class="btn btn-danger fs-4 ms-3 mt-3" href="{% url 'book:user_profile' user.id %}">لغو</a>
+  </form>
+</div>
+  {% endblock %}
+

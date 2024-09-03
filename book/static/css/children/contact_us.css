@@ -1,0 +1,68 @@
+.content{
+    height: 40rem;
+    position: relative;
+
+}
+.video-content{
+    opacity: 0.5;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.content-video{
+    height: 30rem;
+    width: 33rem;
+    padding: 2rem;
+    background-color: #9EB3C2;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 75%, 75% 75%, 75% 100%, 50% 75%, 0% 75%);
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+
+}
+
+@media (max-width: 767.98px) {
+    .content-video{
+        height: 25rem;
+        width: 30rem;
+
+}
+}
+.div-contact{
+    background-color: var(--background-color-contact);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius:0.5rem ;
+
+}
+.text-color{
+    color:var(--text-color-contact-us);
+}
+
+.btn-info{
+    background-color: #9EB3C2;
+    --bs-btn-border-color:#9EB3C2;
+    --bs-btn-hover-bg:#1C7293;
+    --bs-btn-hover-border-color:#1C7293;
+}
+
+.input-contactus{
+    margin-top: 1rem;
+}
+/* show eeror*/
+.contact_us-error{
+    color:var(--color-error);
+    width: 20rem;
+    background-color: var(--background-color-error);
+    padding: 0.5rem;
+    border-bottom: 3px solid red;
+    border-radius: 10px;
+    animation:fadeout 10s forwards;
+}
+@keyframes fadeout {
+   0%{opacity: 1;}
+    75%{opacity: 0.7}
+    100%{opacity: 0}
+}

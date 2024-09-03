@@ -1,0 +1,32 @@
+.btn-secondary2 {
+    --bs-btn-border-color: #1C7293;
+    --bs-btn-hover-border-color: #065A82;
+    --bs-btn-hover-bg: #065A82;
+    --bs-btn-color: #1C7293;
+    --bs-btn-hover-color: #fff;
+    border-radius: 0.5rem;
+}
+.btn-secondary1 {
+    --bs-btn-bg: #1C7293;
+    --bs-btn-border-color: #1C7293;
+    --bs-btn-hover-bg: #065A82;
+    --bs-btn-hover-border-color: #065A82;
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color: #fff;
+}
+
+@media (min-width: 992px)  {
+    .button-form{
+        position: absolute;
+        bottom: -5rem;
+    }
+}
+
+@media (max-width: 992px)  {
+    .button-form{
+        position: absolute;
+        bottom:-43rem;
+        left:9rem;
+
+    }
+}

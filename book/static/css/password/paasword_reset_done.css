@@ -1,0 +1,7 @@
+h1{
+    margin-bottom: 1.5rem;
+}
+
+.p-password-reset-done{
+    color: var(--p-color-password-reset-done);
+}

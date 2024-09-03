@@ -1,0 +1,143 @@
+.cart{
+    color: inherit;
+    text-decoration: none;
+    background-color: #9EB3C2;
+    border-radius: 0.9rem;
+    width: 2.5rem;
+    text-align: center;
+    height: 2.5rem
+}
+.cart:hover{
+    background-color: #587a91;
+}
+.card-body{
+    padding: 0 1rem !important;
+}
+
+.title_a{
+    text-decoration: none;
+    display: flex;
+    align-items:end;
+
+}
+.img-profile-img_tweet{
+    width: 2.7rem;
+    height: 2.7rem;
+    border-radius: 50%;
+    border: 1px solid  black;
+}
+.img-profile-i_tweet{
+    font-size: 1.6rem;
+    color: rgba(0, 0, 0, 0.8);
+}
+.span_title{
+    font-size: 1rem;
+    font-weight: bold;
+    color: black;
+}
+
+.card-hover{
+    transition: 0.5s;
+}
+.card-hover:hover{
+    transform: scale(1.02);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+
+.row-color{
+    background-color: var(--row-category-color);
+}
+
+.card-color{
+    background-color: var(--card-category);
+}
+
+.price-color {
+    color:var(--price-color)
+}
+.created-at-color{
+    color:var(--price-color)
+}
+
+.book-name-color{
+    color:var(--book-name-color)
+}
+
+.card-footer{
+    border-top:1px solid var(--footer-border-top);
+    background-color: var(--color-card-footer);
+}
+.btn-category{
+    border: 1px solid black;
+    direction: rtl;
+    /*background-color: var(--card-category);*/
+    background-color: #9EB3C2;
+
+
+}
+.btn.show{
+    background-color: #9EB3C2;
+}
+.btn-category1{
+    direction: rtl;
+    border: #9EB3C2 1px solid;
+
+
+}
+.btn-category1:hover{
+   border: 1px solid black;
+    background-color: #9EB3C2;
+
+}
+.btn-category:hover{
+    border: 1px solid black;
+    /*background-color: var(--card-category);*/
+    background-color: #9EB3C2;
+
+
+}
+.col-category{
+    border-radius: 0.5rem;
+}
+@media (min-width: 992px) {
+    .dropdown_sort{
+        direction: ltr;
+
+}
+}
+@media (max-width: 992px) {
+    .dropdown_sort{
+        text-align: center;
+
+}
+}
+.card-header{
+    background-color: var(--color-card-footer);
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  padding: 8px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+
+}
+
+/*register*/
+.register-error{
+    color:var(--color-error);
+    width: 20rem;
+    background-color: var(--background-color-error);
+    padding: 0.5rem;
+    border-bottom: 3px solid red;
+    border-radius: 10px;
+    animation:fadeout 10s forwards;
+}
+@keyframes fadeout {
+   0%{opacity: 1;}
+    75%{opacity: 0.7}
+    100%{opacity: 0}
+}

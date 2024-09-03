@@ -1,0 +1,159 @@
+
+{% extends 'book/parent/base.html' %} {% load static %} {% block title %}Contact Us
+{% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/children/contact_us.css' %}" />
+{% endblock %} {% block body %}
+
+    {% if form.errors %}
+        <div class="contact_us-error" style="position:absolute;z-index:100;top: 30px;left: 20px;" >
+              <span class="fw-bold fs-4"><i class="bi bi-x-circle-fill me-2 text-danger"></i>خطا</span>
+              {% for field in form %}
+                  {% if field.errors %}
+                      {% for error in field.errors %}
+                          <p class="fs-5"><span class="fw-bold">{{ field.label }}:</span>{{ error }}</p>
+                      {% endfor %}
+                  {% endif %}
+              {% endfor %}
+              {% if form.non_filed_errors %}
+                  {{ form.non_filed_errors }}
+              {% endif %}
+
+        </div>
+    {% endif %}
+
+<section class="content">
+  <video autoplay muted loop class="video-content">
+    <source src="{% static 'video/connect.mp4' %}" type="video/mp4" />
+  </video>
+  <div class="content-video text-center">
+    <h1 class="fw-bold" data-aos="fade-down">تماس با ما</h1>
+    <p class="mt-4 fs-4" data-aos="fade-up">
+      خوشحالیم که از ما برای اطلاعات بیشتر و پشتیبانی استفاده می‌کنید. در صورت
+      داشتن هرگونه سوال، پیشنهاد یا نیاز به راهنمایی، با ما تماس بگیرید. تیم ما
+      آماده است که به شما کمک کند. ما از اعتماد شما بسیار قدردانی می‌کنیم و
+      منتظر شنیدن نظرات و پیشنهادات شما هستیم. با تشکر از حضور و همراهی شما."
+    </p>
+  </div>
+</section>
+
+
+<div class="container text-color" style="margin-top: 3rem">
+  <div class="row" data-aos="fade-up" data-aos-duration="2000">
+    <div class="col-lg-4 mb-5 mb-lg-0" style="margin-top: 2.3rem">
+      <div class="div-contact ps-4 py-2">
+        <h4 class="fw-bold mb-3">راه های ارتباطی</h4>
+        <p>
+          <i class="bi bi-telephone-fill me-2 footer-icon"></i
+          ><span class="fw-bold">تلفن ثابت :3563136773</span>
+        </p>
+        <p>
+          <i class="bi bi-phone-fill me-2 footer-icon"></i
+          ><span class="fw-bold">شماره تلفن:09114511974</span>
+        </p>
+        <p>
+          <i class="bi bi-envelope-at-fill me-2 footer-icon"></i
+          ><span class="fw-bold">ایمیل:name.example@gmail.com</span>
+        </p>
+        <p>
+          <i class="bi bi-clock-fill me-2 footer-icon"></i
+          ><span class="fw-bold"> ساعت کاری: 8صبح تا 8شب</span>
+        </p>
+      </div>
+    </div>
+    <div class="col-lg-7 offset-lg-1">
+      <div class="row">
+        <h3 class="text-center fw-bold">فرم تماس با ما</h3>
+        <hr />
+      </div>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label fs-5"
+                >نام و نام خانوادگی</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="exampleFormControlInput1"
+                name="full_name"
+              />
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="mb-3">
+              <label for="exampleFormControlInput2" class="form-label fs-5"
+                >شماره تلفن</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="exampleFormControlInput2"
+                name="phone"
+              />
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="mb-3">
+              <label for="exampleFormControlInput3" class="form-label fs-5"
+                >ایمیل</label
+              >
+              <input
+                type="email"
+                class="form-control"
+                id="exampleFormControlInput3"
+                name="email"
+              />
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="mb-3">
+              <label for="exampleFormselect1" class="form-label fs-5"
+                >عنوان</label
+              >
+              <select
+                class="form-select"
+                id="exampleFormselect1"
+                aria-label="Default select example"
+                name="subject"
+              >
+                <option value="انتقاد و پیشنهاد">انتقاد و پیشنهاد</option>
+                <option value="شکایت">شکایت</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <div class="mb-3">
+              <label for="exampleFormControlTextarea1" class="form-label fs-5"
+                >توضیحات</label
+              >
+              <textarea
+                class="form-control"
+                id="exampleFormControlTextarea1"
+                rows="3"
+                name="message"
+              ></textarea>
+            </div>
+          </div>
+
+          <input
+            type="submit"
+            value="ارسال پیام"
+            class="btn btn-info fs-5 input-contactus"
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row text-center mt-5">
+    {% if sent %}
+    <span
+      ><i class="bi bi-check-circle-fill fs-3 text-success"></i
+      ><span class="fs-2 ms-2">ایمیل ارسال شد</span></span
+    >
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

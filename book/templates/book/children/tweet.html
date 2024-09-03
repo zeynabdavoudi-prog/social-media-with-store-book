@@ -1,0 +1,544 @@
+{% extends 'book/parent/base.html' %} {% load static %} {% block title %}Tweet
+{% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/children/tweet.css' %}" />
+{% endblock %} {% block body %}
+{% if request.user.is_authenticated %}
+    {% if profile.file %}
+        <a href="{% url 'book:user_profile' request.user.id %}"
+        ><img
+        class="img-fluid img-profile-img"
+        src="{{ profile.file.url }}"
+        /></a>
+    {% else %}
+        <a href="{% url 'book:user_profile' request.user.id %}"
+        ><i class="bi bi-person-circle img-profile-i" ></i
+        ></a>
+    {% endif %}
+{% endif %}
+
+<form method="post" action="{% url 'book:search_tweet' %}" class="form-search">
+    {% csrf_token %}
+    <input type="text" name="search_input"  class="input-search">
+    <input type="submit" name="submit" value="جستجو"  class="button-search">
+</form>
+
+{% if request.user.is_authenticated %}
+    <div class="container topic-tweet" >
+        <div class="row ">
+                <div class="d-flex justify-content-evenly">
+                    <a class="a_tweet fw-bold fs-3" href="{% url 'book:tweet' %}">همه افراد</a>
+                    <a class="a_tweet fw-bold fs-3" href="{% url 'book:follow_tweet' 1  %}">دنبال شده</a>
+                </div>
+                <span class="border-span  border-5   m-auto" ></span>
+
+        </div>
+    </div>
+    {% else %}
+    <div style="margin-top: 8rem"></div>
+
+{% endif %}
+{#show tweet#}
+<div class="container" style="margin-top: 2rem">
+  <div class="row justify-content-center">
+    <div class="col-md-9"  >
+      {% for tweet in tweets %}
+      <div class="card mb-3 m-auto" style="max-width: 680px;" data-aos="fade-up">
+        <div class="row g-0" >
+          {% if tweet.id in tweet_with_image %}
+          <div class="col-4 col-md-4" >
+            <div class="img-fluid rounded-start">
+              <div
+                id="carouselExampleIndicators"
+                class="carousel slide"
+                data-bs-ride="carousel"
+              >
+                <div class="carousel-inner">
+                  {% for image in image_tweet %} {% if tweet.id ==  image.tweet.id %}
+
+
+                  <div class="carousel-item active">
+                    <img
+                      src="{{ image.file.url }}"
+                      class="d-block w-100 border_image"
+                      alt="..."
+                      style="height: 210px"
+                    />
+                  </div>
+
+                  {% endif %} {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-8 col-md-8">
+            <div class="card-body color-text-card ">
+              <div class="card-title d-flex" >
+                {% for profile in profiles %} {% if profile.user == tweet.user%}
+                {% if profile.file %}
+                <a
+                  class="title_a"
+                  href="{% url 'book:user_profile' tweet.user.id %}"
+                  ><img
+                    class="img-fluid img-profile-img_tweet me-2"
+                    src="{{ profile.file.url }}"
+                  /><span class="span_title"
+                    >{{ profile.user.username }}</span
+                  ></a
+                >
+                {% else %}
+                <a
+                  style=""
+                  class="title_a"
+                  href="{% url 'book:user_profile' tweet.user.id %}"
+                  ><i class="bi bi-person img-profile-i_tweet me-2 border px-2 border-2" style="border-radius: 50%"></i
+                  ><span class="span_title"
+                    >{{ profile.user.username }}</span
+                  ></a
+                >
+                {% endif %} {% endif %} {% endfor %} {% if tweet.updated_at %}
+                <p class="ms-auto">{{ tweet.updated_at| timesince }}</p>
+                {% else %}
+                <p class="ms-auto">{{ tweet.created_at| timesince }}</p>
+                {% endif %}
+              </div>
+              <div class="card-text font-text">
+                <a style="text-decoration: none;color: inherit" href="{% url 'book:tweet_detail' tweet.slug tweet.id %}">{{ tweet.body | truncatewords:20 }}</a>
+              </div>
+              <div class="card-text  ">
+                {% for tag in tweet.tags.all %}
+                {%  if tag|wordcount != 0 %}
+                <a style="text-decoration: none" href="{% url 'book:search_tag' tag.id %}"><small class="small_text">#{{ tag }}</small></a>
+                {% endif %}{% endfor %} {% if request.user.is_authenticated %} {% if tweet.id in user_vote %}
+
+
+                <br />
+
+                <span class="d-flex justify-content-around align-items-end ">
+                  <span
+                    ><a
+                      class="tweet-vote-count "
+                      ><span id="count{{ tweet.id }}">{{ tweet.tvote.count }}</span></a
+                    >
+                    <a onclick="like{{ tweet.id }}('{{ tweet.id }}')"
+                      ><i id="like{{ tweet.id }}" class="bi bi-heart-fill text-danger"></i></a
+                  ></span>
+                  <span
+                    ><span class="tweet-comment-count"
+                      >{{ tweet.comments.count }}</span
+                    ><i class="bi bi-chat-square-text-fill color-icon"></i
+                  ></span>
+{#                  <a href="{% url 'book:share_tweet' tweet.id %}"><i class="bi bi-share-fill color-icon"></i></a>#}
+                    <div class="dropdown dropup">
+                        <a class="btn  dropdown-toggle fw-bold color-icon" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        اشتراک گذاری
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item " href="{% url 'book:share_tweet' tweet.id %}">اشتراک گذاری با ایمیل</a></li>
+                            {% if request.user.is_authenticated  %}
+                            <li><a style="cursor: pointer" class="dropdown-item border-top" data-bs-toggle="modal" data-bs-target="#exampleModalShare{{ tweet.id }}">اشتراگ گذاری به کاربر</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </span>
+
+                {% else %}
+                <br />
+                <span class="d-flex justify-content-around align-items-end"
+                  ><span
+                    ><a
+                      class="tweet-vote-count"
+                      ><span id="count{{ tweet.id }}">{{ tweet.tvote.count }}</span></a
+                    >
+                    <a onclick="like{{ tweet.id }}('{{ tweet.id }}')"
+                      ><i id="like{{ tweet.id }}" class="bi bi-heart color-icon"></i></a
+                  ></span>
+                  <span
+                    ><span class="tweet-comment-count"
+                      >{{ tweet.comments.count }}</span
+                    ><i class="bi bi-chat-square-text-fill color-icon"></i
+                  ></span>
+{#                  <a href="{% url 'book:share_tweet' tweet.id %}"><i class="bi bi-share-fill color-icon"></i></a>#}
+                    <div class="dropdown dropup">
+                        <a class="btn  dropdown-toggle fw-bold color-icon" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        اشتراک گذاری
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item " href="{% url 'book:share_tweet' tweet.id %}">اشتراک گذاری با ایمیل</a></li>
+                            {% if request.user.is_authenticated  %}
+                            <li><a style="cursor: pointer" class="dropdown-item border-top" data-bs-toggle="modal" data-bs-target="#exampleModalShare{{ tweet.id }}">اشتراگ گذاری به کاربر</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </span>
+
+                {% endif %} {% else %}
+                <br />
+                <span class="d-flex justify-content-around align-items-end"
+                  ><span>
+                    <a
+                      class="tweet-vote-count"
+                      >{{ tweet.tvote.count }}</a
+                    >
+                    <a data-bs-toggle="modal" data-bs-target="#exampleModallike{{ tweet.id }}"
+                      ><i class="bi bi-heart color-icon"></i></a
+                  ></span>
+                  <span
+                    ><span class="tweet-comment-count"
+                      >{{ tweet.comments.count }}</span
+                    ><i class="bi bi-chat-square-text-fill color-icon"></i
+                  ></span>
+{#                  <a href="{% url 'book:share_tweet' tweet.id %}"><i class="bi bi-share-fill color-icon"></i></a>#}
+                    <div class="dropdown dropup">
+                        <a class="btn  dropdown-toggle fw-bold color-icon" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        اشتراک گذاری
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item " href="{% url 'book:share_tweet' tweet.id %}">اشتراک گذاری با ایمیل</a></li>
+                            {% if request.user.is_authenticated  %}
+                            <li><a style="cursor: pointer" class="dropdown-item border-top" data-bs-toggle="modal" data-bs-target="#exampleModalShare{{ tweet.id }}">اشتراگ گذاری به کاربر</a></li>
+                             {% endif %}
+                        </ul>
+                    </div>
+                </span>
+
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="col-md-12">
+            <div class="card-body color-text-card">
+              <div class="card-title d-flex">
+                {% for profile in profiles %} {% if profile.user == tweet.user%}
+                {% if profile.file %}
+                <a
+                  class="title_a"
+                  href="{% url 'book:user_profile' tweet.user.id %}"
+                  ><img
+                    class="img-fluid img-profile-img_tweet me-2"
+                    src="{{ profile.file.url }}"
+                  /><span class="span_title"
+                    >{{ profile.user.username }}</span
+                  ></a
+                >
+                {% else %}
+                <a
+                  class="title_a"
+                  href="{% url 'book:user_profile' tweet.user.id %}"
+                  ><i class="bi bi-person img-profile-i_tweet me-2 border px-2 border-2" style="border-radius: 50%"></i
+                  ><span class="span_title"
+                    >{{ profile.user.username }}</span
+                  ></a
+                >
+                {% endif %} {% endif %} {% endfor %} {% if tweet.updated_at %}
+                <p class="ms-auto">{{ tweet.updated_at| timesince }}</p>
+                {% else %}
+                <p class="ms-auto">{{ tweet.created_at| timesince }}</p>
+                {% endif %}
+              </div>
+              <div class="card-text mt-3 font-text">
+                <a style="text-decoration: none;color: inherit" href="{% url 'book:tweet_detail' tweet.slug tweet.id %}">{{ tweet.body | truncatewords:40 }}</a>
+              </div>
+              <div class="card-text">
+
+                {% for tag in tweet.tags.all %}
+                 {% if tag|wordcount != 0 %}
+                <a style="text-decoration: none" href="{% url 'book:search_tag' tag.id %}"><small class="small_text">#{{ tag }}</small></a>
+                {% endif %}{% endfor %} {% if request.user.is_authenticated %} {% if tweet.id in user_vote %}
+
+
+                <br />
+                <span class="d-flex justify-content-around align-items-end">
+                  <span
+                    ><a
+                      class="tweet-vote-count"
+                      ><span id="count{{ tweet.id }}">{{ tweet.tvote.count }}</span></a
+                    >
+                    <a onclick="like{{ tweet.id }}('{{ tweet.id }}')"
+                      ><i id="like{{ tweet.id }}" class="bi bi-heart-fill text-danger"></i></a
+                  ></span>
+                  <span
+                    ><span class="tweet-comment-count"
+                      >{{ tweet.comments.count }}</span
+                    ><i class="bi bi-chat-square-text-fill color-icon"></i
+                  ></span>
+{#                  <a href="{% url 'book:share_tweet' tweet.id %}"><i class="bi bi-share-fill color-icon"></i></a>#}
+                    <div class="dropdown dropup">
+                        <a class="btn  dropdown-toggle fw-bold color-icon" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        اشتراک گذاری
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item " href="{% url 'book:share_tweet' tweet.id %}">اشتراک گذاری با ایمیل</a></li>
+                            {% if request.user.is_authenticated  %}
+                            <li><a style="cursor: pointer" class="dropdown-item border-top" data-bs-toggle="modal" data-bs-target="#exampleModalShare{{ tweet.id }}">اشتراگ گذاری به کاربر</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </span>
+
+                {% else %}
+                <br />
+                <span class="d-flex justify-content-around align-items-end"
+                  ><span
+                    ><a
+                      class="tweet-vote-count"
+                      ><span id="count{{ tweet.id }}">{{ tweet.tvote.count }}</span></a
+                    >
+                    <a onclick="like{{ tweet.id }}('{{ tweet.id }}')"
+                      ><i id="like{{ tweet.id }}" class="bi bi-heart color-icon"></i></a
+                  ></span>
+                  <span
+                    ><span class="tweet-comment-count"
+                      >{{ tweet.comments.count }}</span
+                    ><i class="bi bi-chat-square-text-fill color-icon"></i
+                  ></span>
+{#                  <a href="{% url 'book:share_tweet' tweet.id %}"><i class="bi bi-share-fill color-icon"></i></a>#}
+                    <div class="dropdown dropup">
+                        <a class="btn  dropdown-toggle fw-bold color-icon" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        اشتراک گذاری
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item " href="{% url 'book:share_tweet' tweet.id %}">اشتراک گذاری با ایمیل</a></li>
+                            {% if request.user.is_authenticated  %}
+                            <li><a style="cursor: pointer" class="dropdown-item border-top" data-bs-toggle="modal" data-bs-target="#exampleModalShare{{ tweet.id }}">اشتراگ گذاری به کاربر</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </span>
+
+                {% endif %} {% else %}
+                <br />
+                <span class="d-flex justify-content-around align-items-end "
+                  ><span>
+                    <a
+                      class="tweet-vote-count"
+                      >{{ tweet.tvote.count }}</a
+                    >
+                    <a data-bs-toggle="modal" data-bs-target="#exampleModallike{{ tweet.id }}"
+                      ><i class="bi bi-heart color-icon"></i></a
+                  ></span>
+                  <span
+                    ><span class="tweet-comment-count"
+                      >{{ tweet.comments.count }}</span
+                    ><i class="bi bi-chat-square-text-fill color-icon"></i
+                  ></span>
+{#                  <a href="{% url 'book:share_tweet' tweet.id %}"><i class="bi bi-share-fill color-icon"></i></a>#}
+
+                    <div class="dropdown dropup">
+                        <a class="btn  dropdown-toggle fw-bold color-icon" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        اشتراک گذاری
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item " href="{% url 'book:share_tweet' tweet.id %}">اشتراک گذاری با ایمیل</a></li>
+                            {% if request.user.is_authenticated  %}
+                            <li><a style="cursor: pointer" class="dropdown-item border-top" data-bs-toggle="modal" data-bs-target="#exampleModalShare{{ tweet.id }}">اشتراگ گذاری به کاربر</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+
+<!-- Modal dont have permison to like -->
+<div class="modal fade" id="exampleModallike{{ tweet.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body mt-3 ms-2">
+        <h4><span><i class="bi bi-info-circle me-2 text-info"></i>ابتدا وارد سایت شوید</span></h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+      </div>
+    </div>
+  </div>
+</div>
+{#lik ajax#}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+function like{{ tweet.id }}(tweet_id){
+    var element = document.getElementById('like{{ tweet.id }}')
+    var count = document.getElementById('count{{ tweet.id }}')
+    $.get(`/like/${tweet_id}`).then(response =>{
+        if (response['response'] === 'liked'){
+            element.className = 'bi bi-heart-fill text-danger'
+            count.innerText = Number(count.innerText) + 1
+            const span1Element = document.getElementById('span1opacity{{ tweet.id }}')
+            const span2Element = document.getElementById('span2opacity{{ tweet.id }}')
+            $(span1Element).removeClass('opacity_0');
+            $(span2Element).removeClass('opacity_0');
+        }
+        else {
+            element.className = 'bi bi-heart color-icon'
+            count.innerText = Number(count.innerText) - 1
+            const span1Element = document.getElementById('span1opacity{{ tweet.id }}')
+            const span2Element = document.getElementById('span2opacity{{ tweet.id }}')
+            $(span1Element).addClass('opacity_0');
+            $(span2Element).addClass('opacity_0');
+        }
+    })
+}
+</script>
+{#modal share tweet to user#}
+<div class="modal fade" id="exampleModalShare{{ tweet.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-4 fw-bold" id="exampleModalLabel">اشتراک گذاری به:</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <div class="container">
+      <div class="row text-center">
+        {% for frnd in frnds %}
+            {% for profile in profiles %}
+                {% if profile.user.id == frnd.id %}
+                    <div class="col-4">
+                    {% if profile.file %}
+
+                        <a onclick="ShareTweet{{ tweet.id }}('{{ tweet.id }}','{{ profile.user.id }}')"
+                        ><img
+                        class="img-fluid img-profile-img_chat"
+                        src="{{ profile.file.url }}"
+                        /></a>
+                         <p style="margin-top: 0.2rem">{{ profile.user.username }}</p>
+
+                    {% else %}
+                        <a onclick="ShareTweet{{ tweet.id }}('{{ tweet.id }}','{{ profile.user.id }}')"
+                        ><i class="bi bi-person-circle img-profile-i_chat" ></i
+                        ></a>
+                         <p>{{ profile.user.username }}</p>
+                    {% endif %}
+
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+      </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+{#ajax for modal share tweet to user#}
+<script>
+function ShareTweet{{ tweet.id }}(tweet_id,user_id){
+
+    $.get(`/share_tweet_chat/${tweet_id}/${user_id}`)
+    $('#exampleModalShare{{ tweet.id }}').modal('hide');
+
+}
+</script>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% if tweets.count == 1 %}
+    <div style="margin-top: 10rem"></div>
+{% endif %}
+    {#upload tweet    #}
+{% if request.user.is_authenticated %}
+<!-- Button trigger modal -->
+<div style="position: fixed;left: 1.5rem;bottom: 2.5rem">
+<button
+  type="button"
+  class="upload_tweet_icon"
+  data-bs-toggle="modal"
+  data-bs-target="#exampleModal"
+
+>
+  <span class="badge badge-create-tweet"><i class="bi bi-pencil-fill"></i></span>
+</button>
+</div>
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <h1
+          class="modal-title fs-2 fw-bold"
+          id="exampleModalLabel"
+          style="margin-right: 12rem"
+        >
+          توییت
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+          <div class="mb-1">
+            <label
+              for="exampleFormControlTextarea1"
+              class="form-label fw-bold fs-5"
+              >متن توییت:</label
+            >
+            <textarea
+              class="form-control"
+              id="exampleFormControlTextarea1"
+              rows="2"
+              name="body"
+              placeholder="متن پیام ..."
+            ></textarea>
+          </div>
+          <div class="mb-1">
+            <label
+              for="exampleFormControlInput1"
+              class="form-label fw-bold fs-5"
+              >تگ:</label
+            >
+            <input
+              type="text"
+              class="form-control w-75"
+              id="exampleFormControlInput1"
+              name="tags"
+              placeholder="تگ ها را با کاما(,) از یکدیگر جدا کنید"
+              style="direction: rtl"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label
+              for="exampleFormControlInput2"
+              class="form-label fw-bold fs-5"
+              >عکس:</label
+            >
+            <input
+              type="file"
+              class="form-control w-75"
+              id="exampleFormControlInput2"
+              name="files"
+              multiple=""
+            />
+          </div>
+
+          <input
+            type="submit"
+            value="پست کردن"
+            class="btn btn-outline-primary w-25 fw-bold"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,210 @@
+/* Your light mode styles here */
+body {
+  background-color:rgb(243,244,246) ;
+
+}
+.dark-mode-text{
+  display: none;
+}
+.dark-mode-icon{
+  display: none;
+}
+
+/*background-color for dropdown in navbar*/
+.nav-light-button{
+    background-color:rgb(243,244,246) ;
+}
+/*for btn dropdown*/
+.btn-secondary{
+    --bs-btn-color:black;
+}
+/*background-color navbar in light-mode*/
+.nav-light{
+    background-color: rgb(255,255,255);
+}
+/*for btn dropdown*/
+.btn-secondary {
+    --bs-btn-hover-bg: rgb(228, 229, 232);
+    --bs-btn-active-bg:rgb(228, 229, 232);
+}
+
+/*hover for links in navbar for lg mode,..*/
+.nav-light-a{
+    transition: 0.6s;
+
+}
+.nav-light-a:hover{
+    transform: scale(1.08);
+    color: #1B3B6F;
+}
+ /*script for navbar animation for link */
+.animate{
+    color: #1B3B6F !important;
+    border-bottom: 2px solid #21295C;
+
+}
+
+/*buton login , register befor lg mode*/
+.nav-light-log-reg{
+    border-radius: 50%;
+    background-color: rgb(243,244,246);
+    color: black;
+}
+/*hover for links in navbar befor lg*/
+@media (max-width: 992px) {
+    .nav-item-hover {
+        transition: 0.7s;
+    }
+
+    .nav-item-span {
+        transition: 0.7s;
+    }
+
+    .nav-item-i {
+        transition: 0.7s;
+    }
+
+    .nav-item-hover:hover {
+        background-color: #9EB3C2;
+        border-right: #21295C solid 10px;
+    }
+
+    .nav-item-hover:hover .nav-item-i {
+        padding-right: 5px;
+        color: #21295C;
+    }
+
+    .nav-item-hover:hover .nav-item-span {
+        color: #21295C;
+    }
+}
+/*background color for button offcanvas*/
+.navbar-toggler{
+    background-color:rgb(243,244,246) ;
+
+}
+/* footer*/
+:root {
+  --wave-color: white;
+  --content-footer: black;
+  --footer-link-hover:#1B3B6F;
+}
+/*login*/
+:root{
+    --login-background-color:rgb(243,244,246);
+    --login-form-color:#9EB3C2;
+    --login-input-color:rgb(232, 240, 254);
+}
+
+.a-light-login{
+    color: black;
+}
+
+/*register*/
+:root{
+    --background-color-error:white;
+    --color-error:black
+}
+
+/*password-resert-form*/
+:root{
+    --h1-color-password-reset-form:black;
+    --span-color-password-reset-form:black;
+    --label-color-password-reset-form:black;
+    --hr-color-password-reset-form:black;
+}
+
+/*password-reset-done*/
+:root{
+    --p-color-password-reset-done:black;
+}
+
+/*tweet*/
+:root{
+    --modal-content-color:black;
+    --background-color-modal: rgb(228, 229, 232);
+    /*show tweet*/
+    --background-color-card:white;
+    --border-color-card:black;
+    --text-color-card:black;
+    --color-icon-card:black;
+    --text-modal:black;
+    /* search*/
+    --background-color-input-search:white;
+    --background-color-button-search:white;
+}
+
+/*edit profile*/
+:root{
+    --text-color-edit-profile:black;
+    --border-color-profile-image:rgb(243, 244, 246);
+}
+
+/*share tweet*/
+:root{
+    --text-color:black;
+}
+/*about_us*/
+:root{
+    --text-color-about-us:black;
+}
+/*contact_us*/
+:root{
+    --text-color-contact-us:black;
+    --background-color-contact:white;
+}
+
+/*search tweet*/
+:root{
+    --background-color-card-search:white;
+    --color-text-card:black;
+}
+
+/*update tweet*/
+:root{
+    --background-color-col:white;
+    --color-text-container:black;
+     --background-color-container:rgb(229 ,231 ,235 );
+    --input-color: rgb(243,244,246);
+
+}
+/*tweet detail*/
+:root{
+    --background-color-card-tweet-detail: rgb(243,244,246);
+    --background-color-col-tweet-detail:white;
+    --background-color-card-rep:rgb(229 231 235);
+    --color-node:#E5E7EBFF;
+}
+/*profile*/
+:root{
+    --text-color-profile:black ;
+    --col-background-color:rgb(243, 244, 246);
+    --container-background-color:white;
+    --background-color-nav:rgb(248, 249, 250);
+}
+/*report*/
+:root{
+    --col-main-background-color:white;
+    --textarea-background-color:rgb(243, 244, 246);
+    --color-text-report:black;
+}
+
+/*chat*/
+:root{
+    --chat-background-color: rgb(214, 217, 222);
+}
+/*home*/
+:root{
+    --hr-home:rgb(228,229,232);
+    --color-home:black;
+}
+
+/*categori*/
+:root{
+    --row-category-color:white;
+    --card-category:rgb(243,244,246);
+    --price-color:black;
+    --book-name-color:#065A82;
+    --footer-border-top:rgba(0,0,0,0.175);
+    --color-card-footer:rgba(33,37,41,0.03)
+}

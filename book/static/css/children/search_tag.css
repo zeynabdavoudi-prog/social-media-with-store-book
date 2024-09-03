@@ -1,0 +1,26 @@
+.count-search{
+    position: absolute;
+    left:1rem;
+     top:9.1rem;
+}
+
+@media (min-width: 576px) and (max-width: 768px) {
+    .count-search{
+        position: absolute;
+        left:2rem;
+        top:9.1rem;
+}
+}
+
+@media (min-width: 1399.98px) {
+    .count-search{
+        position: absolute;
+        left: 8rem;
+        top:9.1rem;
+    }
+}
+
+
+.opacity_0{
+    display: none;
+}

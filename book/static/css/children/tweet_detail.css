@@ -1,0 +1,132 @@
+
+.swiper {
+      width: 220px;
+      height: 300px;
+}
+
+.swiper-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 18px;
+}
+
+.image-slide{
+    height: 300px;
+    width: 220px;
+    border: 1px solid black;
+}
+
+
+.btn-secondary1 {
+    --bs-btn-bg: #1C7293;
+    --bs-btn-border-color:#1C7293;
+    --bs-btn-hover-bg:#065A82;
+    --bs-btn-hover-border-color:#065A82;
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color:#fff;
+
+}
+
+.btn-secondary2{
+     --bs-btn-border-color:#1C7293;
+     --bs-btn-hover-border-color:#065A82;
+    --bs-btn-hover-bg:#065A82;
+     --bs-btn-color: #1C7293;
+    --bs-btn-hover-color:#fff;
+    border-radius: 5rem;
+}
+.card-color{
+    background-color: var(--background-color-card-tweet-detail);
+}
+.col_main{
+    background-color: var(--background-color-col-tweet-detail);
+    border-radius: 1rem;
+
+}
+/*@media (min-width: 992px) {*/
+/*    .col_main{*/
+/*        padding-left: 4rem*/
+/*    }*/
+/*}*/
+.text-color{
+    color:var(--text-color)
+}
+
+.img-profile-img_comment{
+    margin-top: 0.7rem;
+    width: 3.8rem;
+    height: 3.8rem;
+    border-radius: 50%;
+    border: 1px solid black;
+}
+.img-profile-i_comment{
+    font-size: 3.8rem;
+    color: rgba(0, 0, 0, 0.8);
+
+}
+.card-color-chat{
+    background-color: var(--background-color-col-tweet-detail);
+}
+
+
+.textarea_tweet_detail{
+    border-radius: 1rem;
+    background-color: var(--background-color-card-tweet-detail);
+}
+
+
+
+.btn-secondary3{
+    --bs-btn-bg: #065A82;
+    --bs-btn-border-color:#065A82;
+    --bs-btn-hover-bg:#1B3B6F;
+    --bs-btn-hover-border-color:#1B3B6F;
+    --bs-btn-color: #fff;
+    --bs-btn-hover-color:#fff;
+    border-radius: 5rem;
+
+}
+
+.tweet-detail-error{
+    color:var(--color-error);
+    width: 20rem;
+    background-color: var(--background-color-error);
+    padding: 0.5rem;
+    border-bottom: 3px solid red;
+    border-radius: 10px;
+    animation:fadeout 10s forwards;
+}
+@keyframes fadeout {
+   0%{opacity: 1;}
+    75%{opacity: 0.7}
+    100%{opacity: 0}
+}
+
+.background-color-card-comment{
+    border-radius: 1rem;
+    background-color: var(--background-color-card-tweet-detail);
+    border: none;
+
+}
+.background-color-card-rep{
+    border-radius: 1rem;
+    background-color: var(--background-color-card-rep);
+    border: none;
+}
+
+
+
+.opacity_0{
+    display: none;
+}
+/*.children{*/
+/*    margin-right: 48px;*/
+/*}*/
+.node{
+    margin-bottom: 1rem;
+    background-color: var(--color-node);
+    border-radius: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}

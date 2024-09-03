@@ -1,0 +1,153 @@
+
+{% extends 'book/parent/base.html' %} {% load static %} {% block title %}Login
+{% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/children/login.css' %}" />
+{% endblock %} {% block body %}
+
+<div id="particles-js">
+{#    {% if form.errors %}#}
+{#        <div class="register-error" style="position:absolute; z-index: 105;top: 20px;left: 20px;" >#}
+{#              <span class="fw-bold fs-4"><i class="bi bi-x-circle-fill me-2 text-danger"></i>خطا</span>#}
+{#              {% for field in form %}#}
+{#                  {% if field.errors %}#}
+{#                      {% for error in field.errors %}#}
+{#                          <p class="fs-5"><span class="fw-bold">{{ field.label }}:</span>{{ error }}</p>#}
+{#                      {% endfor %}#}
+{#                  {% endif %}#}
+{#              {% endfor %}#}
+{#              {% if form.non_filed_errors %}#}
+{#                  {{ form.non_filed_errors }}#}
+{#              {% endif %}#}
+{##}
+{#        </div>#}
+{#    {% endif %}#}
+
+
+  <div
+    class="container-fluid"
+    style="position: absolute; z-index: 100; top: 25%"
+  >
+    <div class="row justify-content-center text-center">
+      <div class="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-4 login-col p-4">
+        <h2 class="fw-bold mb-4 h2-dark-login">ورود به سایت</h2>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="form-floating mb-3">
+            <input
+              style="direction: rtl"
+              type="text"
+              class="form-control"
+              id="floatingInput"
+              placeholder="name@example.com"
+              name="username_email"
+            />
+            <label for="floatingInput" style="font-size: 1.1rem"
+              >نام کاربری یا ایمیل</label
+            >
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              type="password"
+              class="form-control"
+              id="floatingPassword"
+              placeholder="Password"
+              name="password"
+            />
+            <label for="floatingPassword" style="font-size: 1.1rem"
+              >رمز عبور</label
+            >
+          </div>
+          <div class="form-floating mb-3 d-flex ">
+            {{ form.captcha}}
+          </div>
+          <input class="input-login fs-3" type="submit" value="ورود" />
+          <div
+            class="d-flex fw-bold fs-5 justify-content-around mt-3 login-div"
+          >
+            <a href="{% url 'book:reset_password' %}" class="a-dark-login a-light-login">فراموشی رمز عبور</a>
+            <a href="{% url 'book:user-register' %}" class="a-dark-login a-light-login">ثبت نام در سایت</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+  particlesJS("particles-js", {
+    particles: {
+      number: { value: 200, density: { enable: true, value_area: 800 } },
+      color: { value: "#065A82" },
+      shape: {
+        type: "circle",
+        stroke: { width: 0, color: "#000000" },
+        polygon: { nb_sides: 5 },
+        image: { src: "img/github.svg", width: 100, height: 100 },
+      },
+      opacity: {
+        value: 0.5,
+        random: false,
+        anim: { enable: false, speed: 1, opacity_min: 0.1, sync: false },
+      },
+      size: {
+        value: 3,
+        random: true,
+        anim: { enable: false, speed: 40, size_min: 0.1, sync: false },
+      },
+      line_linked: {
+        enable: true,
+        distance: 150,
+        color: "#065A82",
+        opacity: 0.4,
+        width: 1,
+      },
+      move: {
+        enable: true,
+        speed: 6,
+        direction: "none",
+        random: false,
+        straight: false,
+        out_mode: "out",
+        bounce: false,
+        attract: { enable: false, rotateX: 600, rotateY: 1200 },
+      },
+    },
+    interactivity: {
+      detect_on: "canvas",
+      events: {
+        onhover: { enable: true, mode: "repulse" },
+        onclick: { enable: true, mode: "push" },
+        resize: true,
+      },
+      modes: {
+        grab: { distance: 400, line_linked: { opacity: 1 } },
+        bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 },
+        repulse: { distance: 200, duration: 0.4 },
+        push: { particles_nb: 4 },
+        remove: { particles_nb: 2 },
+      },
+    },
+    retina_detect: true,
+  });
+  var count_particles, stats, update;
+  stats = new Stats();
+  stats.setMode(0);
+  stats.domElement.style.position = "absolute";
+  stats.domElement.style.left = "0px";
+  stats.domElement.style.top = "0px";
+  document.body.appendChild(stats.domElement);
+  count_particles = document.querySelector(".js-count-particles");
+  update = function () {
+    stats.begin();
+    stats.end();
+    if (
+      window.pJSDom[0].pJS.particles &&
+      window.pJSDom[0].pJS.particles.array
+    ) {
+      count_particles.innerText = window.pJSDom[0].pJS.particles.array.length;
+    }
+    requestAnimationFrame(update);
+  };
+  requestAnimationFrame(update);
+</script>
+{% endblock %}

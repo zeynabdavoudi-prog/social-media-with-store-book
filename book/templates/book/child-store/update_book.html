@@ -1,0 +1,112 @@
+{% extends "book/parent/base.html" %} {% load static %} {% block title %} Edit
+Book {% endblock %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/children/update_tweet.css' %}" />
+<link rel="stylesheet" href="{% static 'css/child-store/update_book.css' %}" />
+{% endblock %} {% block body %}
+
+    {% if form.errors %}
+        <div class="update-error" style="position:absolute; z-index: 105;top: 40px;left: 20px;" >
+              <span class="fw-bold fs-4"><i class="bi bi-x-circle-fill me-2 text-danger"></i>خطا</span>
+              {% for field in form %}
+                  {% if field.errors %}
+                      {% for error in field.errors %}
+                          <p class="fs-5"><span class="fw-bold">{{ field.label }}:</span>{{ error }}</p>
+                      {% endfor %}
+                  {% endif %}
+              {% endfor %}
+              {% if form.non_filed_errors %}
+                  {{ form.non_filed_errors }}
+              {% endif %}
+
+        </div>
+    {% endif %}
+
+<div class="container text-color-container px-4 " style="margin-top: 5rem;margin-bottom: 3rem;padding-bottom: 4.5rem;padding-top: 2rem;">
+  <form method="post" enctype="multipart/form-data" novalidate >
+    {% csrf_token %}
+    <div class="row main-row">
+
+      <div class="col-10 col-md-8 col-lg-5 col-xl-4 py-2 col-background" style="height: 33rem;">
+        <p class="mt-3 ms-3 fw-bold fs-4">تغییر عکس :</p>
+        <hr class="mb-3" />
+
+          <div class="text-center">
+               <img class="" src="{{ image.url }}" width="250" height="300">
+          </div>
+          <div class="mb-3 mt-4">
+            <label for="formFile" class="form-label fw-bold fs-5 ">اپلود عکس جدید</label>
+            <div id="formFile" class="mb-1 "> {{ form.photo }}</div>
+          </div>
+
+      </div>
+      <div
+        class="col-11 col-lg-6 offset-lg-1 col-xl-7 offset-xl-1 py-2 col-background mt-3 mt-lg-0"
+
+      >
+        <p class="mt-3 ms-3 fw-bold fs-4">تغییر سایر موارد:</p>
+        <hr class="mb-3" />
+         <div class="mb-3">
+          <label for="id_body" class="form-label fw-bold fs-5">معرفی کتاب</label>
+          {{ form.book_introduction }}
+        </div>
+        <div class="mb-3 row">
+          <div class="col-md-6 mb-3">
+            <label for="id_tags" class="form-label fw-bold fs-5">نام کتاب</label>
+            {{ form.name_book }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="id_tags" class="form-label fw-bold fs-5">نام نویسنده</label>
+            {{ form.author }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="id_tags" class="form-label fw-bold fs-5">سال چاپ</label>
+            {{ form.print_year }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="id_tags" class="form-label fw-bold fs-5">نوبت چاب</label>
+            {{ form.period_print }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="id_tags" class="form-label fw-bold fs-5">تعداد صفحات کتاب</label>
+            {{ form.number_of_page }}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="id_tags" class="form-label fw-bold fs-5">قیمت</label>
+            {{ form.price}}
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="id_tags" class="form-label fw-bold fs-5">دسته بندی</label>
+
+            <select name="category" class="form-select border-black text-edit fs-5" aria-label="Default select example">
+                <option selected>{{ form.category.value }}</option>
+                <option value="تاریخ و جغرافیا">تاریخ و جغرافیا</option>
+                <option value="رمان">رمان</option>
+                <option value="کتاب دانشگاهی">کتاب دانشگاهی</option>
+                <option value="خانواده و سبک زندگی">خانواده و سبک زندگی</option>
+                <option value="مذهبی">مذهبی</option>
+                <option value="زندگی و سفرنامه">زندگی و سفرنامه</option>
+                <option value="تاریخ و جغرافیا">تاریخ و جغرافیا</option>
+                <option value="کتاب درسی">کتاب درسی</option>
+                <option value="کتاب زبان">کتاب زبان</option>
+                <option value="فلسفه و عرفان">فلسفه و عرفان</option>
+                <option value="کودک و نوجوان">کودک و نوجوان</option>
+                <option value="شعر و ادبیات">شعر و ادبیات</option>
+                <option value="روانشناسی">روانشناسی</option>
+            </select>
+          </div>
+
+
+        </div>
+
+
+
+      </div>
+    </div>
+    <div  class=" button-form" >
+        <input type="submit" value="ذخیره" class="btn btn-secondary1 px-4 fs-4 mt-5" />
+        <a class="btn btn-secondary2 fs-4 ms-3 mt-5 px-4" href="{% url 'book:detail_salebook' id %}">لغو</a>
+    </div>
+  </form>
+
+</div>
+{% endblock %}

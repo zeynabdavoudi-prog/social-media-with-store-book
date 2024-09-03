@@ -1,0 +1,7 @@
+.text-color{
+    color: var(--price-color);
+}
+.bg-color{
+    background-color: var(--background-color-col-tweet-detail);
+    border-radius: 0.3rem;
+}
